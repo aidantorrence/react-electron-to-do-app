@@ -7,17 +7,23 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-return-assign */
 /* eslint-disable react/button-has-type */
+/* eslint-disable no-restricted-syntax */
 import { useRef, useState, useEffect, useCallback } from 'react';
 import './App.css';
 
 export default function App() {
-  const [listItems, setListItems] = useState([] as any);
-  const [listChecked, setListChecked] = useState([] as any);
+  const [listItems, setListItems] = useState(
+    JSON.parse(localStorage.getItem('listItems') || '[]') || []
+  ) as any;
+  const [listChecked, setListChecked] = useState(
+    JSON.parse(localStorage.getItem('listChecked') || '[]') || []
+  ) as any;
   const heightsRef = useRef([]) as any;
 
   const handleKeyDown = useCallback(
     (e: any) => {
-      if (e.keyCode === 13 && e.metaKey) {
+      if (e.keyCode === 13) {
+        e.preventDefault();
         setListItems([...listItems, '']);
         setListChecked([...listChecked, false]);
       }
@@ -26,14 +32,18 @@ export default function App() {
   );
 
   useEffect(() => {
+    localStorage.setItem('listChecked', JSON.stringify(listChecked));
+  }, [listChecked]);
+
+  useEffect(() => {
     if (!listItems.length) return;
     const heights = heightsRef.current;
-    // eslint-disable-next-line no-restricted-syntax
     for (const height of heights) {
       if (!height?.style) continue;
       height.style.height = '0px';
       height.style.height = `${height.scrollHeight}px`;
     }
+    localStorage.setItem('listItems', JSON.stringify(listItems));
   }, [listItems]);
 
   useEffect(() => {
