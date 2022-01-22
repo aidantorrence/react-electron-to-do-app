@@ -1,18 +1,102 @@
-import { useState } from 'react';
+/* eslint-disable jsx-a11y/control-has-associated-label */
+/* eslint-disable no-continue */
+/* eslint-disable jsx-a11y/no-autofocus */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable @typescript-eslint/no-use-before-define */
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable no-return-assign */
+/* eslint-disable react/button-has-type */
+import { useRef, useState, useEffect, useCallback } from 'react';
 import './App.css';
 
 export default function App() {
-  const [inputValue, setInputValue] = useState(
-    `set up electron app <=> set up nextJS portfolio <=> reddit board that shows top to-dos linked to their site of choice (rewards good to do ers with a link to their website of choice)`
+  const [listItems, setListItems] = useState([] as any);
+  const [listChecked, setListChecked] = useState([] as any);
+  const heightsRef = useRef([]) as any;
+
+  const handleKeyDown = useCallback(
+    (e: any) => {
+      if (e.keyCode === 13 && e.metaKey) {
+        setListItems([...listItems, '']);
+        setListChecked([...listChecked, false]);
+      }
+    },
+    [listChecked, listItems]
   );
+
+  useEffect(() => {
+    if (!listItems.length) return;
+    const heights = heightsRef.current;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const height of heights) {
+      if (!height?.style) continue;
+      height.style.height = '0px';
+      height.style.height = `${height.scrollHeight}px`;
+    }
+  }, [listItems]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
+
+  const handleItems = (e: any, listIdx: number) => {
+    setListItems(
+      listItems.map((item: string, idx: number) =>
+        idx === listIdx ? e.target.value : item
+      )
+    );
+  };
+
+  const handleDelete = (listIdx: number) => {
+    setListItems(listItems.filter((_: string, idx: number) => idx !== listIdx));
+    setListChecked(
+      listChecked.filter((_: boolean, idx: number) => idx !== listIdx)
+    );
+    heightsRef.current = heightsRef.current.filter(
+      (_: any, idx: number) => idx !== listIdx
+    );
+  };
+
   return (
     <div className="main">
-      <textarea
-        className="text-area"
-        onChange={(e) => setInputValue(e.target.value)}
-        value={inputValue}
-        spellCheck="false"
-      />
+      {listItems.map((item: string, listIdx: number) => {
+        return (
+          <div className="list-item" key={listIdx}>
+            <input
+              className="check-box"
+              type="checkbox"
+              checked={listChecked[listIdx]}
+              onChange={(e) =>
+                setListChecked(
+                  listChecked.map((check: string, idx: number) =>
+                    idx === listIdx ? e.target.checked : check
+                  )
+                )
+              }
+            />
+
+            <textarea
+              ref={(el) => (heightsRef.current[listIdx] = el)}
+              className="text-area"
+              autoFocus
+              onChange={(e) => handleItems(e, listIdx)}
+              value={listItems[listIdx]}
+              spellCheck="false"
+              style={
+                listChecked[listIdx] ? { textDecoration: 'line-through' } : {}
+              }
+            />
+            {listChecked[listIdx] && (
+              <button
+                className="delete-button"
+                onClick={() => handleDelete(listIdx)}
+              />
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
