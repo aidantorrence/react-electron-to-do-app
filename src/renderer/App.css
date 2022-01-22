@@ -74,8 +74,5 @@ p, h1, h2, h3, h4, h5, h6 {
   line-height: normal;
   font-family: Arial;
   user-select: none;
+  caret-color: transparent;
  }
-
- ::selection {
-  background: white; 
-}
