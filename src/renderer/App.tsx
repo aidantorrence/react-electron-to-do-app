@@ -1,3 +1,6 @@
+/* eslint-disable promise/no-nesting */
+/* eslint-disable promise/always-return */
+/* eslint-disable promise/catch-or-return */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable no-continue */
 /* eslint-disable jsx-a11y/no-autofocus */
@@ -12,31 +15,34 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import './App.css';
 
 export default function App() {
-  const [listItems, setListItems] = useState(
-    JSON.parse(localStorage.getItem('listItems') || '[]') || []
-  ) as any;
-  const [listChecked, setListChecked] = useState(
-    JSON.parse(localStorage.getItem('listChecked') || '[]') || []
-  ) as any;
+  const [listItems, setListItems] = useState([] as any);
   const heightsRef = useRef([]) as any;
 
-  const handleKeyDown = useCallback(
-    (e: any) => {
-      if (e.keyCode === 13) {
-        e.preventDefault();
-        setListItems([...listItems, '']);
-        setListChecked([...listChecked, false]);
+  const handleKeyDown = useCallback((e: any) => {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      fetch('http://localhost:8080/notion', {
+        body: JSON.stringify({ text: 'hello' }),
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    async function getAllItems() {
+      try {
+        const res = await fetch('http://localhost:8080/notion');
+        const data = await res.json();
+        setListItems(JSON.parse(data)?.results);
+      } catch (e) {
+        console.log(e);
       }
-    },
-    [listChecked, listItems]
-  );
+    }
+    getAllItems();
+  }, []);
 
   useEffect(() => {
-    localStorage.setItem('listChecked', JSON.stringify(listChecked));
-  }, [listChecked]);
-
-  useEffect(() => {
-    if (!listItems.length) return;
     const heights = heightsRef.current;
     for (const height of heights) {
       if (!height?.style) continue;
@@ -51,19 +57,7 @@ export default function App() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  const handleItems = (e: any, listIdx: number) => {
-    setListItems(
-      listItems.map((item: string, idx: number) =>
-        idx === listIdx ? e.target.value : item
-      )
-    );
-  };
-
   const handleDelete = (listIdx: number) => {
-    setListItems(listItems.filter((_: string, idx: number) => idx !== listIdx));
-    setListChecked(
-      listChecked.filter((_: boolean, idx: number) => idx !== listIdx)
-    );
     heightsRef.current = heightsRef.current.filter(
       (_: any, idx: number) => idx !== listIdx
     );
