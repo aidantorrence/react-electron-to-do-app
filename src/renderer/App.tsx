@@ -1,3 +1,6 @@
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable no-continue */
 /* eslint-disable jsx-a11y/no-autofocus */
@@ -9,7 +12,9 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-restricted-syntax */
 import { useRef, useState, useEffect, useCallback } from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import './App.css';
+import dragHandle from './drag-handle.svg';
 
 export default function App() {
   const [listItems, setListItems] = useState(
@@ -20,11 +25,19 @@ export default function App() {
   ) as any;
   const heightsRef = useRef([]) as any;
 
+  const reorder = (list: any, startIndex: any, endIndex: any) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+  };
+
   const handleKeyDown = useCallback(
     (e: any) => {
       if (e.keyCode === 13) {
         e.preventDefault();
-        setListItems([...listItems, '']);
+        setListItems([...listItems, { id: Date.now(), content: '' }]);
         setListChecked([...listChecked, false]);
       }
     },
@@ -53,14 +66,14 @@ export default function App() {
 
   const handleItems = (e: any, listIdx: number) => {
     setListItems(
-      listItems.map((item: string, idx: number) =>
-        idx === listIdx ? e.target.value : item
+      listItems.map((item: any, idx: number) =>
+        idx === listIdx ? { ...item, content: e.target.value } : item
       )
     );
   };
 
   const handleDelete = (listIdx: number) => {
-    setListItems(listItems.filter((_: string, idx: number) => idx !== listIdx));
+    setListItems(listItems.filter((_: any, idx: number) => idx !== listIdx));
     setListChecked(
       listChecked.filter((_: boolean, idx: number) => idx !== listIdx)
     );
@@ -69,44 +82,107 @@ export default function App() {
     );
   };
 
-  return (
-    <div className="main">
-      {listItems.map((item: string, listIdx: number) => {
-        return (
-          <div className="list-item" key={listIdx}>
-            <input
-              className="check-box"
-              type="checkbox"
-              checked={listChecked[listIdx]}
-              onChange={(e) =>
-                setListChecked(
-                  listChecked.map((check: string, idx: number) =>
-                    idx === listIdx ? e.target.checked : check
-                  )
-                )
-              }
-            />
+  function onDragEnd(result: any) {
+    if (!result.destination) {
+      return;
+    }
 
-            <textarea
-              ref={(el) => (heightsRef.current[listIdx] = el)}
-              className="text-area"
-              autoFocus
-              onChange={(e) => handleItems(e, listIdx)}
-              value={listItems[listIdx]}
-              spellCheck="false"
-              style={
-                listChecked[listIdx] ? { textDecoration: 'line-through' } : {}
-              }
-            />
-            {listChecked[listIdx] && (
-              <button
-                className="delete-button"
-                onClick={() => handleDelete(listIdx)}
-              />
-            )}
+    if (result.destination.index === result.source.index) {
+      return;
+    }
+
+    const listItemsReordered = reorder(
+      listItems,
+      result.source.index,
+      result.destination.index
+    );
+    const listCheckedReordered = reorder(
+      listChecked,
+      result.source.index,
+      result.destination.index
+    );
+
+    setListItems(listItemsReordered);
+    setListChecked(listCheckedReordered);
+  }
+
+  return (
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="droppable">
+        {(drop, _) => (
+          <div
+            className="main"
+            ref={drop.innerRef}
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...drop.droppableProps}
+          >
+            {listItems.map((item: any, listIdx: number) => {
+              return (
+                <Draggable
+                  key={item.id}
+                  draggableId={`draggable-${item.id}`}
+                  index={listIdx}
+                >
+                  {(provided, snapshot) => (
+                    <div
+                      className="list-item"
+                      ref={provided.innerRef}
+                      // eslint-disable-next-line react/jsx-props-no-spreading
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      style={{
+                        ...provided.draggableProps.style,
+                        boxShadow: snapshot.isDragging
+                          ? '0 0 .4rem #666'
+                          : 'none',
+                      }}
+                    >
+                      <img
+                        alt="drag-handle"
+                        className="drag-handle"
+                        src={dragHandle}
+                      />
+                      <input
+                        className="check-box"
+                        type="checkbox"
+                        checked={listChecked[listIdx]}
+                        onChange={(e) =>
+                          setListChecked(
+                            listChecked.map((check: string, idx: number) =>
+                              idx === listIdx ? e.target.checked : check
+                            )
+                          )
+                        }
+                      />
+
+                      <textarea
+                        ref={(el) => (heightsRef.current[listIdx] = el)}
+                        className="text-area"
+                        autoFocus
+                        onChange={(e) => handleItems(e, listIdx)}
+                        value={listItems[listIdx].content}
+                        spellCheck="false"
+                        style={
+                          listChecked[listIdx]
+                            ? { textDecoration: 'line-through' }
+                            : {}
+                        }
+                      />
+                      {listChecked[listIdx] && (
+                        <button
+                          className="delete-button"
+                          onClick={() => handleDelete(listIdx)}
+                        />
+                      )}
+                    </div>
+                  )}
+                </Draggable>
+              );
+            })}
+            {drop.placeholder}
           </div>
-        );
-      })}
-    </div>
+        )}
+      </Droppable>
+    </DragDropContext>
   );
 }

@@ -33,7 +33,7 @@ body {
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  -webkit-app-region: drag;
+  /* -webkit-app-region: drag; */
 }
 /*
   6. Improve media defaults
@@ -76,7 +76,7 @@ h6 {
 }
 
 .main {
-  -webkit-app-region: drag;
+  /* -webkit-app-region: drag; */
 }
 
 .text-area {
@@ -115,4 +115,8 @@ h6 {
   border-width: 1px;
   border-radius: 999px;
   margin-left: .5rem;
+}
+
+.drag-handle {
+  cursor: grab;
 }
