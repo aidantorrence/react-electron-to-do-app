@@ -33,7 +33,7 @@ body {
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  /* -webkit-app-region: drag; */
+  -webkit-app-region: drag;
 }
 /*
   6. Improve media defaults
@@ -119,4 +119,5 @@ h6 {
 
 .drag-handle {
   cursor: grab;
+  -webkit-app-region: no-drag;
 }
