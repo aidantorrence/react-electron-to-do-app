@@ -30,7 +30,7 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
+    "productName": "To Do Notes",
     "appId": "org.erb.ElectronReact",
     "asar": true,
     "asarUnpack": "**\\*.{node,dll}",

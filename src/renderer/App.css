@@ -121,6 +121,9 @@ h6 {
 .drag-handle {
   cursor: grab;
   -webkit-app-region: no-drag;
+  background-image: url('./img/drag-handle.svg');
+  width: 100%;
+  height: 100px;
 }
 
 .nav-links a {

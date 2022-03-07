@@ -15,7 +15,6 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useNavigate } from 'react-router-dom';
 import './App.css';
-import dragHandle from './drag-handle.svg';
 
 export default function Notes() {
   const [listItems, setListItems] = useState(
@@ -140,11 +139,7 @@ export default function Notes() {
                           : 'none',
                       }}
                     >
-                      <img
-                        alt="drag-handle"
-                        className="drag-handle"
-                        src={dragHandle}
-                      />
+                      <div className="drag-handle" />
                       <input
                         className="check-box"
                         type="checkbox"
