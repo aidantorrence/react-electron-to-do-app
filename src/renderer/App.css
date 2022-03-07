@@ -24,6 +24,7 @@ html,
 body {
   height: 100%;
   overflow: hidden;
+  font-family: Arial;
 }
 /*
   Typographic tweaks!
@@ -120,4 +121,20 @@ h6 {
 .drag-handle {
   cursor: grab;
   -webkit-app-region: no-drag;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: rgb(149, 139, 139);
+  padding: .25rem;
+  padding-bottom: 0px;
+  margin-left: 10px;
+}
+
+.nav-notes {
+  padding-right: 5px;
+}
+
+.currentTask {
+  padding: 0.5rem;
 }
