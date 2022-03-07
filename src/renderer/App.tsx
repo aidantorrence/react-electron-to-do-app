@@ -1,6 +1,5 @@
 /* eslint-disable no-new */
 /* eslint-disable import/no-cycle */
-import * as React from 'react';
 import create from 'zustand';
 import { useEffect, useCallback } from 'react';
 import { Routes, useNavigate, Route, Link } from 'react-router-dom';
