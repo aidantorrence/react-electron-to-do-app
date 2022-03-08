@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
+  focusBrowser: () => ipcRenderer.send('focus-browser'),
   ipcRenderer: {
     myPing() {
       ipcRenderer.send('ipc-example', 'ping');

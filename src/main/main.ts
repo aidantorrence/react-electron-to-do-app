@@ -33,6 +33,11 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
+ipcMain.on('focus-browser', async () => {
+  // mainWindow?.setSize(800, 600);
+  mainWindow?.center();
+});
+
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
@@ -80,7 +85,7 @@ const createWindow = async () => {
     },
   });
 
-  mainWindow.setAlwaysOnTop(true)
+  mainWindow.setAlwaysOnTop(true);
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
