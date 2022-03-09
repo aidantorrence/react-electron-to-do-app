@@ -89,7 +89,7 @@ async function sendTaskNotification(currentTask: string) {
   const response = await fetch('http://localhost:8080/tasks-completed-today');
   const data = await response.json();
   new Notification(currentTask, {
-    body: `${data.length} tasks completed`,
+    body: `${data.length} tasks completed today`,
     requireInteraction: true,
   });
   window.electron.focusBrowserSmall();
