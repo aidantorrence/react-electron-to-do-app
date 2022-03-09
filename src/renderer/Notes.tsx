@@ -11,7 +11,13 @@
 /* eslint-disable no-return-assign */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-restricted-syntax */
-import { useRef, useState, useEffect, useCallback } from 'react';
+import {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  useLayoutEffect,
+} from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useNavigate } from 'react-router-dom';
 import './App.css';
@@ -50,7 +56,7 @@ export default function Notes() {
     localStorage.setItem('listChecked', JSON.stringify(listChecked));
   }, [listChecked]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!listItems.length) return;
     const heights = heightsRef.current;
     for (const height of heights) {

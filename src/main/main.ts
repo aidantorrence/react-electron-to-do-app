@@ -33,8 +33,16 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
-ipcMain.on('focus-browser', async () => {
-  // mainWindow?.setSize(800, 600);
+ipcMain.on('focus-browser-small', async () => {
+  mainWindow?.setSize(400, 100);
+});
+ipcMain.on('focus-browser-big', async () => {
+  mainWindow?.setSize(800, 500);
+});
+ipcMain.on('focus-browser-med', async () => {
+  mainWindow?.setSize(400, 200);
+});
+ipcMain.on('center', async () => {
   mainWindow?.center();
 });
 

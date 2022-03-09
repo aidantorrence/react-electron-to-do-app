@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable no-new */
 /* eslint-disable import/no-cycle */
 import create from 'zustand';
 import { useEffect, useCallback } from 'react';
-import { Routes, useNavigate, Route, Link } from 'react-router-dom';
+import { Routes, useNavigate, Route } from 'react-router-dom';
 import CurrentTask from './CurrentTask';
 import Notes from './Notes';
 
@@ -26,10 +27,12 @@ export default function App() {
       if (e.metaKey && e.key === 'ArrowRight') {
         e.preventDefault();
         navigate('/currentTask');
+        window.electron.focusBrowserSmall();
       }
       if (e.metaKey && e.key === 'ArrowLeft') {
         e.preventDefault();
         navigate('/index.html');
+        window.electron.focusBrowserMed();
       }
     },
     [navigate]
@@ -37,36 +40,18 @@ export default function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      new Notification('count to 10, then re-focus', {
-        body: currentTask,
-        requireInteraction: true,
-      });
+      navigate('/currentTask');
+      sendTaskNotification(currentTask);
     }, 1000 * 60 * 10);
     return () => clearInterval(interval);
-  }, [currentTask]);
+  }, [currentTask, navigate]);
 
   useEffect(() => {
-    async function sendNotification() {
-      const response = await fetch(
-        'https://heroku-anki.herokuapp.com/least-recently-viewed-anki',
-        { method: 'PATCH' }
-      );
-      const data = await response.json();
-      const { title, content, url } = data[0];
-      const notification = new Notification(title, {
-        body: url || content,
-        requireInteraction: true,
-      });
-      notification.onclick = async (e) => {
-        e.preventDefault(); // prevent the browser from focusing the Notification's tab
-        await window.electron.focusBrowser();
-      };
-    }
     const interval = setInterval(() => {
-      sendNotification();
+      sendAnkiNotification();
     }, 900 * 60 * 120);
     return () => clearInterval(interval);
-  }, [currentTask]);
+  }, [navigate]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
@@ -81,4 +66,32 @@ export default function App() {
       </Routes>
     </>
   );
+}
+
+async function sendAnkiNotification() {
+  const response = await fetch(
+    'http://localhost:8080/least-recently-viewed-anki',
+    { method: 'PATCH' }
+  );
+  const data = await response.json();
+  const { title, content, url } = data[0];
+  const notification = new Notification(title, {
+    body: url || content,
+    requireInteraction: true,
+  });
+  notification.onclick = async (e) => {
+    e.preventDefault(); // prevent the browser from focusing the Notification's tab
+    await window.electron.focusBrowser();
+  };
+}
+
+async function sendTaskNotification(currentTask: string) {
+  const response = await fetch('http://localhost:8080/tasks-completed-today');
+  const data = await response.json();
+  new Notification(currentTask, {
+    body: `${data.length} tasks completed`,
+    requireInteraction: true,
+  });
+  window.electron.focusBrowserSmall();
+  window.electron.center();
 }
