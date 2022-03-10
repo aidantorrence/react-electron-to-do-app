@@ -23,7 +23,7 @@ export default function CurrentTask() {
     (e) => {
       if (e.metaKey && e.keyCode === 13) {
         e.preventDefault();
-        if (window.confirm('Are you sure you want to delete this task?')) {
+        if (window.confirm('Are you sure you want to complete this task?')) {
           fetch('http://localhost:8080/tasks', {
             method: 'POST',
             headers: {

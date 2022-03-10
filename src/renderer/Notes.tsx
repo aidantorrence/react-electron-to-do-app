@@ -19,19 +19,13 @@ import {
   useLayoutEffect,
 } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { useNavigate } from 'react-router-dom';
 import './App.css';
 
 export default function Notes() {
   const [listItems, setListItems] = useState(
     JSON.parse(localStorage.getItem('listItems') || '[]') || []
   ) as any;
-  const [listChecked, setListChecked] = useState(
-    JSON.parse(localStorage.getItem('listChecked') || '[]') || []
-  ) as any;
   const heightsRef = useRef([]) as any;
-
-  const navigate = useNavigate();
 
   const reorder = (list: any, startIndex: any, endIndex: any) => {
     const result = Array.from(list);
@@ -46,15 +40,10 @@ export default function Notes() {
       if (e.keyCode === 13) {
         e.preventDefault();
         setListItems([...listItems, { id: Date.now(), content: '' }]);
-        setListChecked([...listChecked, false]);
       }
     },
-    [listChecked, listItems]
+    [listItems]
   );
-
-  useEffect(() => {
-    localStorage.setItem('listChecked', JSON.stringify(listChecked));
-  }, [listChecked]);
 
   useLayoutEffect(() => {
     if (!listItems.length) return;
@@ -80,11 +69,24 @@ export default function Notes() {
     );
   };
 
+  const handleComplete = (listIdx: number) => {
+    fetch('http://localhost:8080/tasks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: listItems[listIdx].content,
+        authorId: 1,
+      }),
+    });
+    setListItems(listItems.filter((_: any, idx: number) => idx !== listIdx));
+    heightsRef.current = heightsRef.current.filter(
+      (_: any, idx: number) => idx !== listIdx
+    );
+  };
   const handleDelete = (listIdx: number) => {
     setListItems(listItems.filter((_: any, idx: number) => idx !== listIdx));
-    setListChecked(
-      listChecked.filter((_: boolean, idx: number) => idx !== listIdx)
-    );
     heightsRef.current = heightsRef.current.filter(
       (_: any, idx: number) => idx !== listIdx
     );
@@ -104,14 +106,7 @@ export default function Notes() {
       result.source.index,
       result.destination.index
     );
-    const listCheckedReordered = reorder(
-      listChecked,
-      result.source.index,
-      result.destination.index
-    );
-
     setListItems(listItemsReordered);
-    setListChecked(listCheckedReordered);
   }
 
   return (
@@ -146,19 +141,6 @@ export default function Notes() {
                       }}
                     >
                       <div className="drag-handle" />
-                      <input
-                        className="check-box"
-                        type="checkbox"
-                        checked={listChecked[listIdx]}
-                        onChange={(e) =>
-                          setListChecked(
-                            listChecked.map((check: string, idx: number) =>
-                              idx === listIdx ? e.target.checked : check
-                            )
-                          )
-                        }
-                      />
-
                       <textarea
                         ref={(el) => (heightsRef.current[listIdx] = el)}
                         className="text-area"
@@ -166,18 +148,15 @@ export default function Notes() {
                         onChange={(e) => handleItems(e, listIdx)}
                         value={listItems[listIdx].content}
                         spellCheck="false"
-                        style={
-                          listChecked[listIdx]
-                            ? { textDecoration: 'line-through' }
-                            : {}
-                        }
                       />
-                      {listChecked[listIdx] && (
-                        <button
-                          className="delete-button"
-                          onClick={() => handleDelete(listIdx)}
-                        />
-                      )}
+                      <button
+                        className="complete-button"
+                        onClick={() => handleComplete(listIdx)}
+                      />
+                      <button
+                        className="delete-button"
+                        onClick={() => handleDelete(listIdx)}
+                      />
                     </div>
                   )}
                 </Draggable>

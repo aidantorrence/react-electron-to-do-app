@@ -6,6 +6,7 @@ import { useEffect, useCallback } from 'react';
 import { Routes, useNavigate, Route } from 'react-router-dom';
 import CurrentTask from './CurrentTask';
 import Notes from './Notes';
+import Anki from './Anki';
 
 declare global {
   interface Window {
@@ -33,6 +34,11 @@ export default function App() {
         e.preventDefault();
         navigate('/index.html');
         window.electron.focusBrowserMed();
+      }
+      if (e.metaKey && e.key === 'k') {
+        e.preventDefault();
+        navigate('/anki');
+        window.electron.focusBrowserBig();
       }
     },
     [navigate]
@@ -63,6 +69,7 @@ export default function App() {
       <Routes>
         <Route path="/index.html" element={<Notes />} />
         <Route path="currentTask" element={<CurrentTask />} />
+        <Route path="/anki" element={<Anki />} />
       </Routes>
     </>
   );
@@ -70,13 +77,11 @@ export default function App() {
 
 async function sendAnkiNotification() {
   const response = await fetch(
-    'http://localhost:8080/least-recently-viewed-anki',
-    { method: 'PATCH' }
+    'http://localhost:8080/least-recently-viewed-anki'
   );
   const data = await response.json();
   const { title, content, url } = data[0];
   const notification = new Notification(title, {
-    body: url || content,
     requireInteraction: true,
   });
   notification.onclick = async (e) => {
