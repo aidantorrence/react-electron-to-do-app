@@ -54,14 +54,14 @@ export default function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       sendTaskNotification(currentTask);
-    }, 1000 * 60 * 20);
+    }, 1000 * 60 * 10);
     return () => clearInterval(interval);
   }, [currentTask, navigate]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       sendAnkiNotification();
-    }, 800 * 60 * 70);
+    }, 800 * 60 * 45);
     return () => clearInterval(interval);
   }, [navigate]);
 
@@ -84,12 +84,18 @@ export default function App() {
 }
 
 async function sendAnkiNotification() {
-  const ankiRes = await fetch(`${config.api}/anki-to-review`);
-  const anki = await ankiRes.json();
-  const ankisRes = await fetch(`${config.api}/ankis-completed-today`);
-  const ankis = await ankisRes.json();
-  const { title } = anki[0];
-  const { count } = ankis[0];
+  let title = '';
+  let count = '';
+  try {
+    const ankiRes = await fetch(`${config.api}/anki-to-review`);
+    const anki = await ankiRes.json();
+    const ankisRes = await fetch(`${config.api}/ankis-completed-today`);
+    const ankis = await ankisRes.json();
+    title = anki[0].title || '';
+    count = ankis[0].count || '';
+  } catch (e) {
+    console.log(e);
+  }
   const notification = new Notification(title, {
     body: `${count} ankis completed today`,
     requireInteraction: true,
