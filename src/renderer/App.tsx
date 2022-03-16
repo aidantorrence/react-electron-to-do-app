@@ -6,7 +6,8 @@ import { useEffect, useCallback } from 'react';
 import { Routes, useNavigate, Route } from 'react-router-dom';
 import CurrentTask from './CurrentTask';
 import Notes from './Notes';
-import Anki from './Anki';
+import { AnkiSolution, AnkiTitle, AnkiCreate } from './Anki';
+import config from './utils/config';
 
 declare global {
   interface Window {
@@ -37,7 +38,13 @@ export default function App() {
       }
       if (e.metaKey && e.key === 'k') {
         e.preventDefault();
-        navigate('/anki');
+        navigate('/ankiTitle');
+        window.electron.focusBrowserBig();
+        window.electron.center();
+      }
+      if (e.metaKey && e.key === 'n') {
+        e.preventDefault();
+        navigate('/ankiCreate');
         window.electron.focusBrowserBig();
       }
     },
@@ -69,16 +76,16 @@ export default function App() {
       <Routes>
         <Route path="/index.html" element={<Notes />} />
         <Route path="currentTask" element={<CurrentTask />} />
-        <Route path="/anki" element={<Anki />} />
+        <Route path="/ankiTitle" element={<AnkiTitle />} />
+        <Route path="/ankiSolution" element={<AnkiSolution />} />
+        <Route path="/ankiCreate" element={<AnkiCreate />} />
       </Routes>
     </>
   );
 }
 
 async function sendAnkiNotification() {
-  const response = await fetch(
-    'http://localhost:8080/least-recently-viewed-anki'
-  );
+  const response = await fetch(`${config.api}/least-recently-viewed-anki`);
   const data = await response.json();
   const { title, content, url } = data[0];
   const notification = new Notification(title, {
@@ -91,7 +98,7 @@ async function sendAnkiNotification() {
 }
 
 async function sendTaskNotification(currentTask: string) {
-  const response = await fetch('http://localhost:8080/tasks-completed-today');
+  const response = await fetch(`${config.api}/tasks-completed-today`);
   const data = await response.json();
   new Notification(currentTask, {
     body: `${data.length} tasks completed today`,

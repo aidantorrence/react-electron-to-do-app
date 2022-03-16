@@ -154,3 +154,99 @@ h6 {
 .currentTask {
   padding: 0.5rem;
 }
+
+.anki-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+  font-size: 18px;
+  line-height: 1.1;
+  margin: 40px;
+}
+
+.anki-title {
+  margin-bottom: 4rem;
+  white-space: pre-wrap;
+  height: 100%;
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  user-select: none;
+  caret-color: transparent;
+}
+
+.anki-button {
+  padding: 0px 6px 0px 6px;
+  margin: 1px;
+  border-width: 1px;
+  border-radius: 999px;
+  margin-left: .5rem;
+  width: 100px;
+  /* box-shadow: 0px 0px 1px .25px rgba(255, 90, 90, 0.7); */
+}
+.very-easy {
+  border-color:rgba(189, 237, 241, 0.464);
+  background-color: rgba(59, 245, 255, 0.3)
+}
+.easy {
+  border-color:rgba(195, 241, 189, .5);
+  background-color: rgba(81, 255, 0, 0.1);
+}
+.medium {
+  border-color:rgba(241, 236, 189, 0.5);
+  background-color: rgba(255, 230, 0, 0.1);
+}
+.hard {
+  border-color:rgb(251, 159, 159);
+  background-color: rgba(255, 0, 0, 0.1);
+}
+
+.anki-buttons {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  transform: translateX(-50%);
+  display: flex;
+}
+
+.anki-solution {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  font-size: 18px;
+  margin-left: 40px;
+  margin-right: 40px;
+  white-space: pre-wrap;
+  line-height: 1.1;
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+  user-select: none;
+  caret-color: transparent;
+}
+
+.anki-form {
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+  line-height: 1.1;
+  font-size: 15px;
+  -webkit-app-region: no-drag;
+}
+.anki-form-title {
+  height: 35vh;
+}
+.anki-form-solution {
+  height: 35vh;
+}
+.anki-form-topic {
+  height: 28px;
+}

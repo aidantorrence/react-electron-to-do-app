@@ -20,6 +20,7 @@ import {
 } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import './App.css';
+import config from './utils/config';
 
 export default function Notes() {
   const [listItems, setListItems] = useState(
@@ -70,7 +71,7 @@ export default function Notes() {
   };
 
   const handleComplete = (listIdx: number) => {
-    fetch('http://localhost:8080/tasks', {
+    fetch(`${config.api}/tasks`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

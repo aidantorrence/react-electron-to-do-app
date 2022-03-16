@@ -4,6 +4,7 @@
 /* eslint-disable jsx-a11y/no-autofocus */
 import { useRef, useLayoutEffect, useCallback, useEffect } from 'react';
 import { useStore } from './App';
+import config from './utils/config';
 
 export default function CurrentTask() {
   const setCurrentTask = useStore((state) => state.setCurrentTask);
@@ -24,7 +25,7 @@ export default function CurrentTask() {
       if (e.metaKey && e.keyCode === 13) {
         e.preventDefault();
         if (window.confirm('Are you sure you want to complete this task?')) {
-          fetch('http://localhost:8080/tasks', {
+          fetch(`${config.api}/tasks`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
