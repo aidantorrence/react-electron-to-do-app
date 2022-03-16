@@ -176,7 +176,7 @@ h6 {
   resize: none;
   overflow: hidden;
   user-select: none;
-  caret-color: transparent;
+  /* caret-color: transparent; */
 }
 
 .anki-button {
@@ -204,6 +204,9 @@ h6 {
   border-color:rgb(251, 159, 159);
   background-color: rgba(255, 0, 0, 0.1);
 }
+.skip {
+  border-color:rgb(248, 244, 244);
+}
 
 .anki-buttons {
   position: fixed;
@@ -230,7 +233,7 @@ h6 {
   resize: none;
   overflow: hidden;
   user-select: none;
-  caret-color: transparent;
+  /* caret-color: transparent; */
 }
 
 .anki-form {

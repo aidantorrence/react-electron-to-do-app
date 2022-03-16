@@ -33,6 +33,8 @@ export function AnkiTitle() {
         newDaysToAdd += 4;
       } else if (difficulty === 'easy') {
         newDaysToAdd += 8;
+      } else if (difficulty === 'skip') {
+        newDaysToAdd = 0;
       } else {
         newDaysToAdd += 32;
       }
@@ -44,6 +46,7 @@ export function AnkiTitle() {
         body: JSON.stringify({
           daysToAdd: newDaysToAdd,
           reviewDate: DateTime.now().plus({ days: newDaysToAdd }).toISO(),
+          lastReviewedDate: DateTime.now().toISO(),
           id: anki.id,
         }),
       });
@@ -54,6 +57,10 @@ export function AnkiTitle() {
 
   const handleKeyDown = useCallback(
     async (e) => {
+      if (e.key === '5') {
+        e.preventDefault();
+        handleClick('skip');
+      }
       if (e.key === '4') {
         e.preventDefault();
         handleClick('very-easy');
@@ -134,7 +141,13 @@ export function AnkiTitle() {
             onClick={() => handleClick('very-easy')}
             className="anki-button very-easy"
           >
-            😴
+            🌟
+          </button>
+          <button
+            onClick={() => handleClick('skip')}
+            className="anki-button skip"
+          >
+            ⏭
           </button>
         </div>
       )}

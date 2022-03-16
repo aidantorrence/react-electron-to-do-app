@@ -26,12 +26,12 @@ export default function App() {
 
   const handleKeyDown = useCallback(
     (e) => {
-      if (e.metaKey && e.key === 'ArrowRight') {
+      if (e.metaKey && e.key === '=') {
         e.preventDefault();
         navigate('/currentTask');
         window.electron.focusBrowserSmall();
       }
-      if (e.metaKey && e.key === 'ArrowLeft') {
+      if (e.metaKey && e.key === '-') {
         e.preventDefault();
         navigate('/index.html');
         window.electron.focusBrowserMed();
@@ -53,16 +53,15 @@ export default function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      navigate('/currentTask');
       sendTaskNotification(currentTask);
-    }, 1000 * 60 * 10);
+    }, 1000 * 60 * 20);
     return () => clearInterval(interval);
   }, [currentTask, navigate]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       sendAnkiNotification();
-    }, 900 * 60 * 120);
+    }, 800 * 60 * 70);
     return () => clearInterval(interval);
   }, [navigate]);
 
@@ -85,15 +84,19 @@ export default function App() {
 }
 
 async function sendAnkiNotification() {
-  const response = await fetch(`${config.api}/least-recently-viewed-anki`);
-  const data = await response.json();
-  const { title, content, url } = data[0];
+  const ankiRes = await fetch(`${config.api}/anki-to-review`);
+  const anki = await ankiRes.json();
+  const ankisRes = await fetch(`${config.api}/ankis-completed-today`);
+  const ankis = await ankisRes.json();
+  const { title } = anki[0];
+  const { count } = ankis[0];
   const notification = new Notification(title, {
+    body: `${count} ankis completed today`,
     requireInteraction: true,
   });
-  notification.onclick = async (e) => {
+  notification.onclick = (e) => {
     e.preventDefault(); // prevent the browser from focusing the Notification's tab
-    await window.electron.focusBrowser();
+    window.electron.focusBrowser();
   };
 }
 
@@ -104,6 +107,5 @@ async function sendTaskNotification(currentTask: string) {
     body: `${data.length} tasks completed today`,
     requireInteraction: true,
   });
-  window.electron.focusBrowserSmall();
   window.electron.center();
 }
