@@ -191,7 +191,11 @@ export function AnkiSolution() {
 }
 
 export function AnkiCreate() {
-  const [anki, setAnki] = useState({} as any);
+  const [anki, setAnki] = useState({
+    title: '',
+    solution: '',
+    topic: '',
+  } as any);
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
