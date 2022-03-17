@@ -102,7 +102,7 @@ async function sendAnkiNotification() {
   });
   notification.onclick = (e) => {
     e.preventDefault(); // prevent the browser from focusing the Notification's tab
-    window.electron.focusBrowser();
+    window.electron.focusBrowserBig();
   };
 }
 

@@ -57,23 +57,23 @@ export function AnkiTitle() {
 
   const handleKeyDown = useCallback(
     async (e) => {
-      if (e.key === '5') {
+      if (e.metaKey && e.key === '5') {
         e.preventDefault();
         handleClick('skip');
       }
-      if (e.key === '4') {
+      if (e.metaKey && e.key === '4') {
         e.preventDefault();
         handleClick('very-easy');
       }
-      if (e.key === '3') {
+      if (e.metaKey && e.key === '3') {
         e.preventDefault();
         handleClick('easy');
       }
-      if (e.key === '2') {
+      if (e.metaKey && e.key === '2') {
         e.preventDefault();
         handleClick('medium');
       }
-      if (e.key === '1') {
+      if (e.metaKey && e.key === '1') {
         e.preventDefault();
         handleClick('hard');
       }
