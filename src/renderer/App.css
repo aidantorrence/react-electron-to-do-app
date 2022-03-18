@@ -253,3 +253,18 @@ h6 {
 .anki-form-topic {
   height: 28px;
 }
+
+.anki-topic {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  margin-left: 20px;
+}
+
+.anki-topic-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 200px;
+  justify-content: center;
+}

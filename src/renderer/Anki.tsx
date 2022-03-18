@@ -234,6 +234,50 @@ export function AnkiCreate() {
     </form>
   );
 }
+export function AnkiTopics() {
+  const [topics, setTopics] = useState([] as any[]);
+  const [checkUpdate, setCheckUpdate] = useState(false);
+
+
+  useEffect(() => {
+    async function fetchTopics() {
+      const res = await fetch(`${config.api}/topics`);
+      setTopics(await res.json());
+    }
+    fetchTopics();
+  }, [checkUpdate]);
+
+  async function handleChange(e: any) {
+    const res = await fetch(`${config.api}/filter-ankis`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        topic: e.target.value,
+        enabled: e.target.checked,
+      }),
+    });
+    await res.json();
+    setCheckUpdate(!checkUpdate);
+  }
+
+  return (
+    <div className="anki-topic-container">
+      {topics.map((topic) => (
+        <div key={topic.id} className="anki-topic">
+          <input
+            type="checkbox"
+            checked={topic.enabled}
+            onChange={handleChange}
+            value={topic.topic}
+          />
+          <div>{topic.topic}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 async function updateAnki(anki: any) {
   await fetch(`${config.api}/anki`, {

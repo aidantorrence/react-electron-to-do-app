@@ -6,7 +6,7 @@ import { useEffect, useCallback } from 'react';
 import { Routes, useNavigate, Route } from 'react-router-dom';
 import CurrentTask from './CurrentTask';
 import Notes from './Notes';
-import { AnkiSolution, AnkiTitle, AnkiCreate } from './Anki';
+import { AnkiSolution, AnkiTitle, AnkiCreate, AnkiTopics } from './Anki';
 import config from './utils/config';
 
 declare global {
@@ -47,6 +47,11 @@ export default function App() {
         navigate('/ankiCreate');
         window.electron.focusBrowserBig();
       }
+      if (e.metaKey && e.key === 't') {
+        e.preventDefault();
+        navigate('/ankiTopics');
+        window.electron.focusBrowserBig();
+      }
     },
     [navigate]
   );
@@ -78,6 +83,7 @@ export default function App() {
         <Route path="/ankiTitle" element={<AnkiTitle />} />
         <Route path="/ankiSolution" element={<AnkiSolution />} />
         <Route path="/ankiCreate" element={<AnkiCreate />} />
+        <Route path="/ankiTopics" element={<AnkiTopics />} />
       </Routes>
     </>
   );
