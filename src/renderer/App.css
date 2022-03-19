@@ -92,7 +92,7 @@ h6 {
   line-height: normal;
   font-family: Arial;
   user-select: none;
-  caret-color: transparent;
+  /* caret-color: transparent; */
 }
 
 .list-item {
