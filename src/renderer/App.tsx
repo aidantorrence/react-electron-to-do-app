@@ -66,7 +66,8 @@ export default function App() {
   useEffect(() => {
     const interval = setInterval(() => {
       sendAnkiNotification();
-    }, 800 * 60 * 45);
+      navigate('/ankiTitle');
+    }, 800 * 60 * 120);
     return () => clearInterval(interval);
   }, [navigate]);
 
@@ -102,13 +103,14 @@ async function sendAnkiNotification() {
   } catch (e) {
     console.log(e);
   }
+  window.electron.focusBrowserBig();
+  window.electron.center();
   const notification = new Notification(title, {
     body: `${count} ankis completed today`,
     requireInteraction: true,
   });
   notification.onclick = (e) => {
     e.preventDefault(); // prevent the browser from focusing the Notification's tab
-    window.electron.focusBrowserBig();
   };
 }
 
