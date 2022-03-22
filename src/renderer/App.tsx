@@ -80,7 +80,8 @@ export default function App() {
     <>
       <Routes>
         <Route path="/index.html" element={<Notes />} />
-        <Route path="currentTask" element={<CurrentTask />} />
+        <Route path="/currentTask" element={<CurrentTask />} />
+        <Route path="/backlog" element={<Backlog />} />
         <Route path="/ankiTitle" element={<AnkiTitle />} />
         <Route path="/ankiSolution" element={<AnkiSolution />} />
         <Route path="/ankiCreate" element={<AnkiCreate />} />

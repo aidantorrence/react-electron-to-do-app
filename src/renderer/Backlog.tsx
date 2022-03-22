@@ -79,26 +79,10 @@ export default function Notes() {
       body: JSON.stringify({
         content: listItems[listIdx].content,
         authorId: 1,
-        completed: true,
       }),
     });
-    setListItems(listItems.filter((_: any, idx: number) => idx !== listIdx));
-    heightsRef.current = heightsRef.current.filter(
-      (_: any, idx: number) => idx !== listIdx
-    );
   };
   const handleDelete = (listIdx: number) => {
-    fetch(`${config.api}/tasks`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        content: listItems[listIdx].content,
-        authorId: 1,
-        completed: false,
-      }),
-    });
     setListItems(listItems.filter((_: any, idx: number) => idx !== listIdx));
     heightsRef.current = heightsRef.current.filter(
       (_: any, idx: number) => idx !== listIdx
@@ -123,18 +107,11 @@ export default function Notes() {
   }
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="droppable">
-        {(drop, _) => (
           <div
             className="main"
-            ref={drop.innerRef}
-            // eslint-disable-next-line react/jsx-props-no-spreading
-            {...drop.droppableProps}
           >
             {listItems.map((item: any, listIdx: number) => {
               return (
-                <Draggable
                   key={item.id}
                   draggableId={`draggable-${item.id}`}
                   index={listIdx}
@@ -172,13 +149,8 @@ export default function Notes() {
                       />
                     </div>
                   )}
-                </Draggable>
               );
             })}
-            {drop.placeholder}
           </div>
-        )}
-      </Droppable>
-    </DragDropContext>
   );
 }
