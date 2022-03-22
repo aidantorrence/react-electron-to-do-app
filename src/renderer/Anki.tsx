@@ -236,7 +236,6 @@ export function AnkiCreate() {
 }
 export function AnkiTopics() {
   const [topics, setTopics] = useState([] as any[]);
-  const [checkUpdate, setCheckUpdate] = useState(false);
 
 
   useEffect(() => {
@@ -245,7 +244,7 @@ export function AnkiTopics() {
       setTopics(await res.json());
     }
     fetchTopics();
-  }, [checkUpdate]);
+  }, []);
 
   async function handleChange(e: any) {
     const res = await fetch(`${config.api}/filter-ankis`, {
@@ -259,7 +258,8 @@ export function AnkiTopics() {
       }),
     });
     await res.json();
-    setCheckUpdate(!checkUpdate);
+    const topicsRes = await fetch(`${config.api}/topics`);
+    setTopics(await topicsRes.json());
   }
 
   return (
