@@ -11,146 +11,69 @@
 /* eslint-disable no-return-assign */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-restricted-syntax */
-import {
-  useRef,
-  useState,
-  useEffect,
-  useCallback,
-  useLayoutEffect,
-} from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useRef, useState, useLayoutEffect, useEffect } from 'react';
 import './App.css';
 import config from './utils/config';
 
 export default function Notes() {
-  const [listItems, setListItems] = useState(
-    JSON.parse(localStorage.getItem('listItems') || '[]') || []
-  ) as any;
+  const [backlog, setBacklog] = useState([]) as any;
   const heightsRef = useRef([]) as any;
 
-  const reorder = (list: any, startIndex: any, endIndex: any) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-
-    return result;
-  };
-
-  const handleKeyDown = useCallback(
-    (e: any) => {
-      if (e.keyCode === 13) {
-        e.preventDefault();
-        setListItems([...listItems, { id: Date.now(), content: '' }]);
-      }
-    },
-    [listItems]
-  );
-
-  useLayoutEffect(() => {
-    if (!listItems.length) return;
-    const heights = heightsRef.current;
-    for (const height of heights) {
-      if (!height?.style) continue;
-      height.style.height = '0px';
-      height.style.height = `${height.scrollHeight}px`;
-    }
-    localStorage.setItem('listItems', JSON.stringify(listItems));
-  }, [listItems]);
-
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
+    async function fetchBacklog() {
+      const res = await fetch(`${config.api}/backlog`);
+      setBacklog(await res.json());
+    }
+    fetchBacklog();
+  }, []);
 
-  const handleItems = (e: any, listIdx: number) => {
-    setListItems(
-      listItems.map((item: any, idx: number) =>
-        idx === listIdx ? { ...item, content: e.target.value } : item
-      )
-    );
-  };
-
-  const handleComplete = (listIdx: number) => {
-    fetch(`${config.api}/tasks`, {
-      method: 'POST',
+  const handleComplete = async (listIdx: number) => {
+    const completeRes = await fetch(`${config.api}/tasks`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        content: listItems[listIdx].content,
-        authorId: 1,
+        id: backlog[listIdx].id,
+        completed: true,
       }),
     });
+    await completeRes.text();
+    const backlogRes = await fetch(`${config.api}/backlog`);
+    setBacklog(await backlogRes.json());
   };
-  const handleDelete = (listIdx: number) => {
-    setListItems(listItems.filter((_: any, idx: number) => idx !== listIdx));
-    heightsRef.current = heightsRef.current.filter(
-      (_: any, idx: number) => idx !== listIdx
-    );
+  const handleDelete = async (listIdx: number) => {
+    const deleteRes = await fetch(`${config.api}/tasks`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: backlog[listIdx].id,
+      }),
+    });
+    await deleteRes.text();
+    const backlogRes = await fetch(`${config.api}/backlog`);
+    setBacklog(await backlogRes.json());
   };
-
-  function onDragEnd(result: any) {
-    if (!result.destination) {
-      return;
-    }
-
-    if (result.destination.index === result.source.index) {
-      return;
-    }
-
-    const listItemsReordered = reorder(
-      listItems,
-      result.source.index,
-      result.destination.index
-    );
-    setListItems(listItemsReordered);
-  }
 
   return (
-          <div
-            className="main"
-          >
-            {listItems.map((item: any, listIdx: number) => {
-              return (
-                  key={item.id}
-                  draggableId={`draggable-${item.id}`}
-                  index={listIdx}
-                >
-                  {(provided, snapshot) => (
-                    <div
-                      className="list-item"
-                      ref={provided.innerRef}
-                      // eslint-disable-next-line react/jsx-props-no-spreading
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={{
-                        ...provided.draggableProps.style,
-                        boxShadow: snapshot.isDragging
-                          ? '0 0 .4rem #666'
-                          : 'none',
-                      }}
-                    >
-                      <div className="drag-handle" />
-                      <textarea
-                        ref={(el) => (heightsRef.current[listIdx] = el)}
-                        className="text-area"
-                        autoFocus
-                        onChange={(e) => handleItems(e, listIdx)}
-                        value={listItems[listIdx].content}
-                        spellCheck="false"
-                      />
-                      <button
-                        className="complete-button"
-                        onClick={() => handleComplete(listIdx)}
-                      />
-                      <button
-                        className="delete-button"
-                        onClick={() => handleDelete(listIdx)}
-                      />
-                    </div>
-                  )}
-              );
-            })}
-          </div>
+    <div className="main">
+      {backlog.map((item: any, listIdx: number) => {
+        return (
+          <ul key={item.id} className="list-item">
+            <li className="backlog-list-item">{backlog[listIdx].content}</li>
+            <button
+              className="complete-button"
+              onClick={() => handleComplete(listIdx)}
+            />
+            <button
+              className="delete-button"
+              onClick={() => handleDelete(listIdx)}
+            />
+          </ul>
+        );
+      })}
+    </div>
   );
 }

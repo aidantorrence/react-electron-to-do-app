@@ -8,6 +8,7 @@ import CurrentTask from './CurrentTask';
 import Notes from './Notes';
 import { AnkiSolution, AnkiTitle, AnkiCreate, AnkiTopics } from './Anki';
 import config from './utils/config';
+import Backlog from './Backlog';
 
 declare global {
   interface Window {
@@ -34,6 +35,11 @@ export default function App() {
       if (e.metaKey && e.key === '-') {
         e.preventDefault();
         navigate('/index.html');
+        window.electron.focusBrowserMed();
+      }
+      if (e.metaKey && e.key === 'b') {
+        e.preventDefault();
+        navigate('/backlog');
         window.electron.focusBrowserMed();
       }
       if (e.metaKey && e.key === 'k') {
@@ -80,8 +86,8 @@ export default function App() {
     <>
       <Routes>
         <Route path="/index.html" element={<Notes />} />
-        <Route path="/currentTask" element={<CurrentTask />} />
-        <Route path="/backlog" element={<Backlog />} />
+        <Route path="currentTask" element={<CurrentTask />} />
+        <Route path="backlog" element={<Backlog />} />
         <Route path="/ankiTitle" element={<AnkiTitle />} />
         <Route path="/ankiSolution" element={<AnkiSolution />} />
         <Route path="/ankiCreate" element={<AnkiCreate />} />

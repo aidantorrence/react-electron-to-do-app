@@ -237,7 +237,6 @@ export function AnkiCreate() {
 export function AnkiTopics() {
   const [topics, setTopics] = useState([] as any[]);
 
-
   useEffect(() => {
     async function fetchTopics() {
       const res = await fetch(`${config.api}/topics`);
