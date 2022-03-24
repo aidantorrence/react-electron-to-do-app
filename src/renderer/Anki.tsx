@@ -17,12 +17,20 @@ export function AnkiTitle() {
   const setAnki = useStore((state) => state.setAnki);
   const anki = useStore((state) => state.anki);
   const navigate = useNavigate();
+  const [timer, setTimer] = useState(0);
 
   const fetchAnki = useCallback(async () => {
     const response = await fetch(`${config.api}/anki-to-review`);
     const data = await response.json();
     setAnki(data[0] || {});
   }, [setAnki]);
+
+  useEffect(() => {
+    const count = setInterval(() => {
+      setTimer((t) => t + 1);
+    }, 1000);
+    return () => clearInterval(count);
+  }, []);
 
   const handleClick = useCallback(
     (difficulty: string) => {
@@ -107,8 +115,18 @@ export function AnkiTitle() {
     fetchAnki();
   }, [fetchAnki, setAnki]);
 
+  const formatTime = () => {
+    const getSeconds = `0${timer % 60}`.slice(-2);
+    const minutes = Math.floor(timer / 60);
+    const getMinutes = `0${minutes % 60}`.slice(-2);
+    const getHours = `0${Math.floor(timer / 3600)}`.slice(-2);
+
+    return `${getMinutes} : ${getSeconds}`;
+  };
+
   return (
     <>
+      <div className="anki-stopwatch">{formatTime()}</div>
       <div className="anki-container">
         <textarea
           spellCheck="false"
