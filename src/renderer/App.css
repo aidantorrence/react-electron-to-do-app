@@ -90,10 +90,11 @@ h6 {
   margin: 0;
   padding-left: 0.5rem;
   line-height: normal;
-  font-family: Arial;
+  font-family: BlinkMacSystemFont;
   user-select: none;
   /* caret-color: transparent; */
 }
+
 
 .list-item {
   display: flex;
@@ -152,7 +153,39 @@ h6 {
 }
 
 .currentTask {
-  padding: 0.5rem;
+  padding: 0.25rem;
+  height: 100vh;
+  box-shadow: inset 0px 0px 10px 5px rgba(0, 255, 234, 0.43), 0px 0px 20px 10px rgba(0,255,255,0.43);
+  animation: glow 4s infinite alternate;
+}
+
+.current-task-text-area {
+  outline: none;
+  resize: none;
+  width: 100%;
+  overflow: hidden;
+  border: none;
+  box-sizing: border-box;
+  margin: 5px;
+  padding: 0.25rem;
+  line-height: normal;
+  font-family: BlinkMacSystemFont;
+  font-weight: 700;
+  user-select: none;
+  font-size: 2rem;
+  color: rgb(29, 0, 0);
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0);
+  /* caret-color: transparent; */
+}
+
+@keyframes glow {
+  from {
+    box-shadow: inset 0px 0px 10px 5px rgba(0, 140, 255, 0.43), 0px 0px 20px 10px rgba(0, 140, 255, 0.43);
+  }
+  to {
+    box-shadow: inset 0px 0px 10px 5px rgba(0, 255, 34, 0.43), 0px 0px 20px 10px rgba(0, 255, 34, 0.43);
+  }
 }
 
 .anki-container {
