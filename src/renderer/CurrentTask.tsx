@@ -69,7 +69,7 @@ export default function CurrentTask() {
     <div className={`currentTask ${theme}`}>
       <textarea
         ref={textareaRef}
-        className={`current-task-text-area ${theme}`}
+        className={`current-task-text-area current-task-text-area-${theme}`}
         autoFocus
         onChange={handleChange}
         value={currentTask}

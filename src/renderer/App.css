@@ -155,14 +155,24 @@ h6 {
 
 .dark {
   background-color: rgba(0, 47, 175, 0.8);
-  color: white;
+  animation: glow-dark 3s infinite alternate ease-in-out;
+}
+
+@keyframes glow-dark {
+  from {
+    background-color: rgba(0, 2, 71, 0.8);
+    box-shadow: inset 0px 0px 10px 5px rgba(0, 140, 255, 0.43), 0px 0px 20px 10px rgba(0, 140, 255, 0.43);
+  }
+  to {
+    background-color: rgba(203, 0, 78, 0.8);
+    box-shadow: inset 0px 0px 10px 5px rgba(255, 0, 200, 0.43), 0px 0px 20px 10px rgba(255, 0, 200, 0.43);
+  }
 }
 
 .currentTask {
   padding: 0.25rem;
   height: 100vh;
   box-shadow: inset 0px 0px 10px 5px rgba(0, 255, 234, 0.43), 0px 0px 20px 10px rgba(0,255,255,0.43);
-  animation: glow 4s infinite alternate;
 }
 
 .current-task-text-area {
@@ -182,7 +192,11 @@ h6 {
   border-radius: 10px;
   background-color: rgba(0, 0, 0, 0);
   padding: 10vh;
+  color: transparent;
   /* caret-color: transparent; */
+}
+.current-task-text-area-dark {
+  color: white;
 }
 
 @keyframes glow {
