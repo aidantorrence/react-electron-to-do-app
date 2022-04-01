@@ -19,6 +19,8 @@ declare global {
 export const useStore = create((set: any) => ({
   currentTask: '',
   setCurrentTask: (input: string) => set({ currentTask: input }),
+  theme: 'dark',
+  setTheme: (input: string) => set({ theme: input }),
 }));
 
 export default function App() {

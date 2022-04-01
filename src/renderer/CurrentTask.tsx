@@ -2,13 +2,21 @@
 /* eslint-disable no-alert */
 /* eslint-disable import/no-cycle */
 /* eslint-disable jsx-a11y/no-autofocus */
-import { useRef, useLayoutEffect, useCallback, useEffect } from 'react';
+import {
+  useRef,
+  useLayoutEffect,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useStore } from './App';
 import config from './utils/config';
 
 export default function CurrentTask() {
   const setCurrentTask = useStore((state) => state.setCurrentTask);
   const currentTask = useStore((state) => state.currentTask);
+  const setTheme = useStore((state) => state.setTheme);
+  const theme = useStore((state) => state.theme);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   useLayoutEffect(() => {
@@ -39,8 +47,12 @@ export default function CurrentTask() {
           setCurrentTask('');
         }
       }
+      if (e.metaKey && e.key === 'l') {
+        e.preventDefault();
+        setTheme(theme === 'light' ? 'dark' : 'light');
+      }
     },
-    [currentTask, setCurrentTask]
+    [currentTask, setCurrentTask, setTheme, theme]
   );
 
   useEffect(() => {
@@ -54,10 +66,10 @@ export default function CurrentTask() {
   }
 
   return (
-    <div className="currentTask">
+    <div className={`currentTask ${theme}`}>
       <textarea
         ref={textareaRef}
-        className="current-task-text-area"
+        className={`current-task-text-area ${theme}`}
         autoFocus
         onChange={handleChange}
         value={currentTask}

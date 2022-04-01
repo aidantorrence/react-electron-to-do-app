@@ -153,6 +153,11 @@ h6 {
   padding-right: 5px;
 }
 
+.dark {
+  background-color: rgba(0, 47, 175, 0.8);
+  color: white;
+}
+
 .currentTask {
   padding: 0.25rem;
   height: 100vh;
@@ -174,9 +179,8 @@ h6 {
   font-weight: 600;
   user-select: none;
   font-size: 1.5rem;
-  color: rgb(29, 0, 0);
   border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0);
+  background-color: rgba(0, 0, 0, 0);
   padding: 10vh;
   /* caret-color: transparent; */
 }
