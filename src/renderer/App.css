@@ -169,6 +169,19 @@ h6 {
   }
 }
 
+.light {
+  animation: glow-light 3s infinite alternate ease-in-out;
+}
+
+@keyframes glow-light {
+  from {
+    box-shadow: inset 0px 0px 10px 5px rgba(0, 140, 255, 0.43), 0px 0px 20px 10px rgba(0, 140, 255, 0.43);
+  }
+  to {
+    box-shadow: inset 0px 0px 10px 5px rgba(255, 0, 200, 0.43), 0px 0px 20px 10px rgba(255, 0, 200, 0.43);
+  }
+}
+
 .currentTask {
   padding: 0.25rem;
   height: 100vh;
@@ -192,20 +205,10 @@ h6 {
   border-radius: 10px;
   background-color: rgba(0, 0, 0, 0);
   padding: 10vh;
-  color: transparent;
   /* caret-color: transparent; */
 }
 .current-task-text-area-dark {
   color: white;
-}
-
-@keyframes glow {
-  from {
-    box-shadow: inset 0px 0px 10px 5px rgba(0, 140, 255, 0.43), 0px 0px 20px 10px rgba(0, 140, 255, 0.43);
-  }
-  to {
-    box-shadow: inset 0px 0px 10px 5px rgba(0, 255, 34, 0.43), 0px 0px 20px 10px rgba(0, 255, 34, 0.43);
-  }
 }
 
 .anki-container {
