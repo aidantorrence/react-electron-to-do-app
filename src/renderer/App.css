@@ -164,7 +164,7 @@ h6 {
     box-shadow: inset 0px 0px 10px 5px rgba(0, 140, 255, 0.43), 0px 0px 20px 10px rgba(0, 140, 255, 0.43);
   }
   to {
-    background-color: rgba(203, 0, 78, 0.8);
+    background-color: rgb(0, 74, 68);
     box-shadow: inset 0px 0px 10px 5px rgba(255, 0, 200, 0.43), 0px 0px 20px 10px rgba(255, 0, 200, 0.43);
   }
 }
@@ -206,7 +206,21 @@ h6 {
   background-color: rgba(0, 0, 0, 0);
   padding: 10vh;
   /* caret-color: transparent; */
+  animation: 2s pulse-anim infinite;
 }
+
+@keyframes pulse-anim {
+  0% {
+  }
+  .5% {
+    text-shadow: 0px 0px 10px rgba(255, 255, 255, 1);
+    transform: scale(1.005);
+  }
+  10% {
+    transform: scale(1);
+  }
+}
+
 .current-task-text-area-dark {
   color: white;
 }
