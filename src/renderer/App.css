@@ -213,11 +213,12 @@ h6 {
   0% {
   }
   .5% {
-    text-shadow: 0px 0px 10px rgba(255, 255, 255, 1);
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #fff, 0 0 50px #fff, 0 0 60px #fff, 0 0 70px #fff;
     transform: scale(1.005);
   }
-  10% {
+  15% {
     transform: scale(1);
+    text-shadow: 0px 0px 0px rgba(255, 255, 255, 1);
   }
 }
 
