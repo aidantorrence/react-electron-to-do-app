@@ -66,7 +66,8 @@ export default function CurrentTask() {
   }
 
   return (
-    <div className={`currentTask ${theme}`}>
+    <>
+      <div className={`currentTask ${theme}`} />
       <textarea
         ref={textareaRef}
         className={`current-task-text-area current-task-text-area-${theme}`}
@@ -75,6 +76,6 @@ export default function CurrentTask() {
         value={currentTask}
         spellCheck="false"
       />
-    </div>
+    </>
   );
 }

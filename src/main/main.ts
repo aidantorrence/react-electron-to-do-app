@@ -34,7 +34,7 @@ ipcMain.on('ipc-example', async (event, arg) => {
 });
 
 ipcMain.on('focus-browser-small', async () => {
-  mainWindow?.setSize(400, 100);
+  mainWindow?.setSize(400, 200);
 });
 ipcMain.on('focus-browser-big', async () => {
   mainWindow?.setSize(800, 500);
@@ -87,6 +87,7 @@ const createWindow = async () => {
   mainWindow = new BrowserWindow({
     show: false,
     frame: false,
+    transparent: true,
     icon: getAssetPath('icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
