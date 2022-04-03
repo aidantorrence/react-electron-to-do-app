@@ -125,7 +125,7 @@ export function AnkiTitle() {
   };
 
   return (
-    <>
+    <div className="anki-title-container">
       <div className="anki-stopwatch">{formatTime()}</div>
       <div className="anki-container">
         <textarea
@@ -169,7 +169,7 @@ export function AnkiTitle() {
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

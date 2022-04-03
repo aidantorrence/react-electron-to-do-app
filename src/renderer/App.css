@@ -78,6 +78,8 @@ h6 {
 
 .main {
   /* -webkit-app-region: drag; */
+  background-color: white;
+  height: 100vh;
 }
 
 .text-area {
@@ -235,6 +237,10 @@ h6 {
   color: white;
 }
 
+.anki-title-container {
+  background-color: white;
+  height: 100vh;
+}
 .anki-container {
   display: flex;
   flex-direction: column;
