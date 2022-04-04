@@ -9,6 +9,7 @@ import Notes from './Notes';
 import { AnkiSolution, AnkiTitle, AnkiCreate, AnkiTopics } from './Anki';
 import config from './utils/config';
 import Backlog from './Backlog';
+import distractions from './utils/distractions';
 
 declare global {
   interface Window {
@@ -21,11 +22,14 @@ export const useStore = create((set: any) => ({
   setCurrentTask: (input: string) => set({ currentTask: input }),
   theme: 'dark',
   setTheme: (input: string) => set({ theme: input }),
+  distracted: false,
+  setDistracted: (input: boolean) => set({ distracted: input }),
 }));
 
 export default function App() {
   const currentTask = useStore((state) => state.currentTask);
   const navigate = useNavigate();
+  const setDistracted = useStore((state) => state.setDistracted);
 
   const handleKeyDown = useCallback(
     (e) => {
@@ -63,6 +67,27 @@ export default function App() {
     },
     [navigate]
   );
+
+  useEffect(() => {
+    window.electron.ipcRenderer.on('activeWindow', (msg: any) => {
+      const info = msg[0].url ? msg[0].url : msg[0]?.owner.name;
+      for (let i = 0; i < distractions.length; i += 1) {
+        if (info.includes(distractions[i])) {
+          setDistracted(true);
+          return;
+        }
+      }
+      setDistracted(false);
+    });
+  }, [setDistracted]);
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      // const res = await fetch(`${config.api}/current-desktop-window`);
+      // const activeWindow = await res.json();
+      window.electron.getActiveWindow();
+    }, 1000 * 1);
+    return () => clearInterval(interval);
+  }, [currentTask, navigate]);
 
   useEffect(() => {
     const interval = setInterval(() => {

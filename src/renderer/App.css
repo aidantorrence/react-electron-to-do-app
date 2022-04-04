@@ -195,6 +195,41 @@ h6 {
   border-radius: 700px;
 }
 
+.distracted-false {
+  animation: glow-distracted-false .7s infinite linear;
+  background: linear-gradient(75deg, rgb(21, 44, 20), rgb(23, 109, 73));
+}
+
+@keyframes glow-distracted-false {
+  0% {
+    box-shadow: inset 0px 0px 10px 5px rgb(11, 58, 46);
+  }
+  50% {
+    box-shadow: inset 0px 0px 10px 5px rgba(18, 44, 66, 0.43);
+  }
+  100% {
+    transform: rotate(360deg);
+    box-shadow: inset 0px 0px 10px 5px rgb(11, 58, 46);
+  }
+}
+.distracted-true {
+  animation: glow-distracted-true .3s infinite linear;
+  background: linear-gradient(75deg, rgb(141, 14, 14), rgb(248, 2, 14));
+}
+
+@keyframes glow-distracted-true {
+  0% {
+    box-shadow: inset 0px 0px 10px 5px rgb(11, 58, 46);
+  }
+  50% {
+    box-shadow: inset 0px 0px 10px 5px rgba(18, 44, 66, 0.43);
+  }
+  100% {
+    transform: rotate(360deg);
+    box-shadow: inset 0px 0px 10px 5px rgb(11, 58, 46);
+  }
+}
+
 .current-task-text-area {
   outline: none;
   resize: none;

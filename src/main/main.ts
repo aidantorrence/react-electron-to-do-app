@@ -14,6 +14,7 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import activeWindow from 'active-win';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -44,6 +45,16 @@ ipcMain.on('focus-browser-med', async () => {
 });
 ipcMain.on('center', async () => {
   mainWindow?.center();
+});
+// eslint-disable-next-line consistent-return
+ipcMain.on('get-active-window', async () => {
+  try {
+    const activeWin = await activeWindow();
+    mainWindow?.webContents.send('activeWindow', activeWin);
+    return activeWin;
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 if (process.env.NODE_ENV === 'production') {
