@@ -20,5 +20,4 @@ export default [
   'imdb',
   'apple',
   'discord',
-  'medium',
 ];
