@@ -35,7 +35,7 @@ ipcMain.on('ipc-example', async (event, arg) => {
 });
 
 ipcMain.on('focus-browser-small', async () => {
-  mainWindow?.setSize(400, 200);
+  mainWindow?.setSize(225, 225);
 });
 ipcMain.on('focus-browser-big', async () => {
   mainWindow?.setSize(800, 500);

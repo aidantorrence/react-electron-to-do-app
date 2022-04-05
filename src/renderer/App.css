@@ -195,6 +195,19 @@ h6 {
   border-radius: 700px;
 }
 
+.currentTaskContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.currentTaskGrid {
+  display: grid;
+  place-items: center;
+  grid-template-areas: 'inner-div';
+  position: relative;
+}
+
 .distracted-false {
   animation: glow-distracted-false .7s infinite linear;
   background: linear-gradient(75deg, rgb(21, 44, 20), rgb(23, 109, 73));
@@ -249,8 +262,8 @@ h6 {
   /* caret-color: transparent; */
   /* animation: 2s pulse-anim infinite; */
   position: absolute;
-  top: 100px;
-  left: 100px;
+  top: 50%;
+  left: 50%;
   width: 200px;
   transform: translate(-50%, -50%);
 }

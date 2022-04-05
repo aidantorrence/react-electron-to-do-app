@@ -61,8 +61,10 @@ export default function CurrentTask() {
   }
 
   return (
-    <>
-      <div className={`currentTask ${theme} distracted-${distracted}`} />
+    <div className="currentTaskContainer">
+      <div className="currentTaskGrid">
+        <div className={`currentTask ${theme} distracted-${distracted}`} />
+      </div>
       <textarea
         ref={textareaRef}
         className={`current-task-text-area current-task-text-area-${theme}`}
@@ -71,6 +73,6 @@ export default function CurrentTask() {
         value={currentTask}
         spellCheck="false"
       />
-    </>
+    </div>
   );
 }
