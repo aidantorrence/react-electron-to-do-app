@@ -2,9 +2,24 @@
 /* eslint-disable no-alert */
 /* eslint-disable import/no-cycle */
 /* eslint-disable jsx-a11y/no-autofocus */
-import { useRef, useLayoutEffect, useCallback, useEffect } from 'react';
+import {
+  useRef,
+  useLayoutEffect,
+  useCallback,
+  useEffect,
+  useState,
+  createRef,
+} from 'react';
 import { useStore } from './App';
 import config from './utils/config';
+
+function resizeTextArea(textareaRef: any) {
+  if (textareaRef && textareaRef.current) {
+    textareaRef.current.style.height = '0px';
+    const { scrollHeight } = textareaRef.current;
+    textareaRef.current.style.height = `${scrollHeight}px`;
+  }
+}
 
 export default function CurrentTask() {
   const setCurrentTask = useStore((state) => state.setCurrentTask);
@@ -13,15 +28,13 @@ export default function CurrentTask() {
   const setTheme = useStore((state) => state.setTheme);
   const theme = useStore((state) => state.theme);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const divRef = createRef() as any;
 
   useLayoutEffect(() => {
-    if (textareaRef && textareaRef.current) {
-      textareaRef.current.style.height = '0px';
-      const { scrollHeight } = textareaRef.current;
-      textareaRef.current.style.height = `${scrollHeight}px`;
-    }
+    resizeTextArea(textareaRef);
+
     setCurrentTask(localStorage.getItem('currentTask') || '');
-  }, [currentTask, setCurrentTask]);
+  }, [currentTask, setCurrentTask, divRef, textareaRef]);
 
   const handleKeyDown = useCallback(
     (e) => {
@@ -55,13 +68,23 @@ export default function CurrentTask() {
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      resizeTextArea(textareaRef);
+    });
+    return () =>
+      window.removeEventListener('resize', () => {
+        resizeTextArea(textareaRef);
+      });
+  }, [handleKeyDown, textareaRef]);
+
   function handleChange(e: any) {
     localStorage.setItem('currentTask', e.target.value);
     setCurrentTask(e.target.value);
   }
 
   return (
-    <div className="currentTaskContainer">
+    <div className="currentTaskContainer" ref={divRef}>
       <div className="currentTaskGrid">
         <div className={`currentTask ${theme} distracted-${distracted}`} />
       </div>

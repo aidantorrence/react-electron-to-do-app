@@ -22,6 +22,16 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import './App.css';
 import config from './utils/config';
 
+function resizeTextAreas(listItems: any, heightsRef: any) {
+  if (!listItems.length) return;
+  const heights = heightsRef.current;
+  for (const height of heights) {
+    if (!height?.style) continue;
+    height.style.height = '0px';
+    height.style.height = `${height.scrollHeight}px`;
+  }
+}
+
 export default function Notes() {
   const [listItems, setListItems] = useState(
     JSON.parse(localStorage.getItem('listItems') || '[]') || []
@@ -47,13 +57,7 @@ export default function Notes() {
   );
 
   useLayoutEffect(() => {
-    if (!listItems.length) return;
-    const heights = heightsRef.current;
-    for (const height of heights) {
-      if (!height?.style) continue;
-      height.style.height = '0px';
-      height.style.height = `${height.scrollHeight}px`;
-    }
+    resizeTextAreas(listItems, heightsRef);
     localStorage.setItem('listItems', JSON.stringify(listItems));
   }, [listItems]);
 
@@ -61,6 +65,16 @@ export default function Notes() {
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
+
+  useEffect(() => {
+    window.addEventListener('resize', () => {
+      resizeTextAreas(listItems, heightsRef);
+    });
+    return () =>
+      window.removeEventListener('resize', () => {
+        resizeTextAreas(listItems, heightsRef);
+      });
+  }, [handleKeyDown, listItems]);
 
   const handleItems = (e: any, listIdx: number) => {
     setListItems(
