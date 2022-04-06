@@ -72,7 +72,7 @@ export default function App() {
     window.electron.ipcRenderer.on('activeWindow', (msg: any) => {
       const info = msg[0].url ? msg[0].url : msg[0]?.owner.name;
       for (let i = 0; i < distractions.length; i += 1) {
-        if (info.includes(distractions[i])) {
+        if (info.toLowerCase().includes(distractions[i])) {
           setDistracted(true);
           return;
         }
