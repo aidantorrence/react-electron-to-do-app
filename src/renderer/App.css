@@ -259,7 +259,7 @@ h6 {
   border-radius: 10px;
   background-color: rgba(0, 0, 0, 0);
   padding: 20% 20px 20% 20px;
-  /* caret-color: transparent; */
+  caret-color: transparent;
   /* animation: 2s pulse-anim infinite; */
   position: absolute;
   top: 50%;
