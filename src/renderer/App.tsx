@@ -17,9 +17,14 @@ declare global {
   }
 }
 
+const timerLength = 60 * 30;
+
 export const useStore = create((set: any) => ({
   currentTask: '',
   setCurrentTask: (input: string) => set({ currentTask: input }),
+  timer: timerLength,
+  decreaseTimer: () => set((state: any) => ({ timer: state.timer - 1 })),
+  resetTimer: () => set({ timer: timerLength }),
   theme: 'dark',
   setTheme: (input: string) => set({ theme: input }),
   distracted: false,
@@ -30,6 +35,8 @@ export default function App() {
   const currentTask = useStore((state) => state.currentTask);
   const navigate = useNavigate();
   const setDistracted = useStore((state) => state.setDistracted);
+  const decreaseTimer = useStore((state) => state.decreaseTimer);
+  const resetTimer = useStore((state) => state.resetTimer);
 
   const handleKeyDown = useCallback(
     (e) => {
@@ -91,10 +98,18 @@ export default function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
+      resetTimer();
       window.electron.prompt();
-    }, 1000 * 60 * 30);
+    }, 1000 * timerLength);
     return () => clearInterval(interval);
-  }, []);
+  }, [resetTimer]);
+
+  useEffect(() => {
+    const count = setInterval(() => {
+      decreaseTimer();
+    }, 1000);
+    return () => clearInterval(count);
+  }, [decreaseTimer]);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {

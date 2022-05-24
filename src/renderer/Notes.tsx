@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable @typescript-eslint/no-shadow */
@@ -19,8 +20,10 @@ import {
   useLayoutEffect,
 } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useStore } from './App';
 import './App.css';
 import config from './utils/config';
+import formatTime from './utils/formatTime';
 
 function resizeTextAreas(listItems: any, heightsRef: any) {
   if (!listItems.length) return;
@@ -37,6 +40,7 @@ export default function Notes() {
     JSON.parse(localStorage.getItem('listItems') || '[]') || []
   ) as any;
   const heightsRef = useRef([]) as any;
+  const timer = useStore((state) => state.timer);
 
   const reorder = (list: any, startIndex: any, endIndex: any) => {
     const result = Array.from(list);
@@ -137,62 +141,64 @@ export default function Notes() {
   }
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="droppable">
-        {(drop, _) => (
-          <div
-            className="main"
-            ref={drop.innerRef}
-            // eslint-disable-next-line react/jsx-props-no-spreading
-            {...drop.droppableProps}
-          >
-            {listItems.map((item: any, listIdx: number) => {
-              return (
-                <Draggable
-                  key={item.id}
-                  draggableId={`draggable-${item.id}`}
-                  index={listIdx}
-                >
-                  {(provided, snapshot) => (
-                    <div
-                      className="list-item"
-                      ref={provided.innerRef}
-                      // eslint-disable-next-line react/jsx-props-no-spreading
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      style={{
-                        ...provided.draggableProps.style,
-                        boxShadow: snapshot.isDragging
-                          ? '0 0 .4rem #666'
-                          : 'none',
-                      }}
-                    >
-                      <div className="drag-handle" />
-                      <textarea
-                        ref={(el) => (heightsRef.current[listIdx] = el)}
-                        className="text-area"
-                        autoFocus
-                        onChange={(e) => handleItems(e, listIdx)}
-                        value={listItems[listIdx].content}
-                        spellCheck="false"
-                      />
-                      <button
-                        className="complete-button"
-                        onClick={() => handleComplete(listIdx)}
-                      />
-                      <button
-                        className="delete-button"
-                        onClick={() => handleDelete(listIdx)}
-                      />
-                    </div>
-                  )}
-                </Draggable>
-              );
-            })}
-            {drop.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
+    <div className="main">
+      <div className="notes-stopwatch">{formatTime(timer)}</div>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="droppable">
+          {(drop, _) => (
+            <div
+              ref={drop.innerRef}
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...drop.droppableProps}
+            >
+              {listItems.map((item: any, listIdx: number) => {
+                return (
+                  <Draggable
+                    key={item.id}
+                    draggableId={`draggable-${item.id}`}
+                    index={listIdx}
+                  >
+                    {(provided, snapshot) => (
+                      <div
+                        className="list-item"
+                        ref={provided.innerRef}
+                        // eslint-disable-next-line react/jsx-props-no-spreading
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        style={{
+                          ...provided.draggableProps.style,
+                          boxShadow: snapshot.isDragging
+                            ? '0 0 .4rem #666'
+                            : 'none',
+                        }}
+                      >
+                        <div className="drag-handle" />
+                        <textarea
+                          ref={(el) => (heightsRef.current[listIdx] = el)}
+                          className="text-area"
+                          autoFocus
+                          onChange={(e) => handleItems(e, listIdx)}
+                          value={listItems[listIdx].content}
+                          spellCheck="false"
+                        />
+                        <button
+                          className="complete-button"
+                          onClick={() => handleComplete(listIdx)}
+                        />
+                        <button
+                          className="delete-button"
+                          onClick={() => handleDelete(listIdx)}
+                        />
+                      </div>
+                    )}
+                  </Draggable>
+                );
+              })}
+              {drop.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </div>
   );
 }

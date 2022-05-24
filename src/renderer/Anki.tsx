@@ -7,6 +7,7 @@ import create from 'zustand';
 import { useNavigate } from 'react-router-dom';
 import { DateTime } from 'luxon';
 import config from './utils/config';
+import formatTime from './utils/formatTime';
 
 const useStore = create((set: any) => ({
   anki: {} as any,
@@ -115,18 +116,9 @@ export function AnkiTitle() {
     fetchAnki();
   }, [fetchAnki, setAnki]);
 
-  const formatTime = () => {
-    const getSeconds = `0${timer % 60}`.slice(-2);
-    const minutes = Math.floor(timer / 60);
-    const getMinutes = `0${minutes % 60}`.slice(-2);
-    const getHours = `0${Math.floor(timer / 3600)}`.slice(-2);
-
-    return `${getMinutes} : ${getSeconds}`;
-  };
-
   return (
     <div className="anki-title-container">
-      <div className="anki-stopwatch">{formatTime()}</div>
+      <div className="anki-stopwatch">{formatTime(timer)}</div>
       <div className="anki-container">
         <textarea
           spellCheck="false"
