@@ -17,7 +17,12 @@ import log from 'electron-log';
 import activeWindow from 'active-win';
 import prompt from 'electron-prompt';
 import MenuBuilder from './menu';
-import { firstPrompt, resolveHtmlPath, secondPrompt } from './util';
+import {
+  firstPrompt,
+  resolveHtmlPath,
+  secondPrompt,
+  thirdPrompt,
+} from './util';
 
 export default class AppUpdater {
   constructor() {
@@ -50,6 +55,7 @@ ipcMain.on('center', async () => {
 ipcMain.on('prompt', async () => {
   prompt(firstPrompt, mainWindow)
     .then(() => prompt(secondPrompt, mainWindow))
+    .then(() => prompt(thirdPrompt, mainWindow))
     .catch(() => 'yolo');
 });
 // eslint-disable-next-line consistent-return
