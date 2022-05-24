@@ -89,20 +89,20 @@ export default function App() {
     return () => clearInterval(interval);
   }, [currentTask, navigate]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      sendTaskNotification(currentTask);
-    }, 1000 * 60 * 10);
-    return () => clearInterval(interval);
-  }, [currentTask, navigate]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     sendTaskNotification(currentTask);
+  //   }, 1000 * 60 * 10);
+  //   return () => clearInterval(interval);
+  // }, [currentTask, navigate]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      sendAnkiNotification();
-      navigate('/ankiTitle');
-    }, 800 * 60 * 120);
-    return () => clearInterval(interval);
-  }, [navigate]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     sendAnkiNotification();
+  //     navigate('/ankiTitle');
+  //   }, 800 * 60 * 120);
+  //   return () => clearInterval(interval);
+  // }, [navigate]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);

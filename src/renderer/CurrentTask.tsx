@@ -42,7 +42,7 @@ export default function CurrentTask() {
         ref={textareaRef}
         className={`current-task-text-area current-task-text-area-${theme}`}
         autoFocus
-        value={`(5 min task) ${currentTask}`}
+        value={`${currentTask} (~5min)`}
         spellCheck="false"
       />
     </div>
