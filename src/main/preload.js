@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld('electron', {
   focusBrowserMed: () => ipcRenderer.send('focus-browser-med'),
   focusBrowserSmall: () => ipcRenderer.send('focus-browser-small'),
   center: () => ipcRenderer.send('center'),
+  prompt: () => ipcRenderer.send('prompt'),
   getActiveWindow: () => ipcRenderer.send('get-active-window'),
   ipcRenderer: {
     myPing() {

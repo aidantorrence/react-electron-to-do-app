@@ -89,12 +89,12 @@ export default function App() {
     return () => clearInterval(interval);
   }, [currentTask, navigate]);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     sendTaskNotification(currentTask);
-  //   }, 1000 * 60 * 10);
-  //   return () => clearInterval(interval);
-  // }, [currentTask, navigate]);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      window.electron.prompt();
+    }, 1000 * 60 * 30);
+    return () => clearInterval(interval);
+  }, []);
 
   // useEffect(() => {
   //   const interval = setInterval(() => {

@@ -15,8 +15,9 @@ import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import activeWindow from 'active-win';
+import prompt from 'electron-prompt';
 import MenuBuilder from './menu';
-import { resolveHtmlPath } from './util';
+import { firstPrompt, resolveHtmlPath, secondPrompt } from './util';
 
 export default class AppUpdater {
   constructor() {
@@ -26,7 +27,7 @@ export default class AppUpdater {
   }
 }
 
-let mainWindow: BrowserWindow | null = null;
+let mainWindow: BrowserWindow | undefined;
 
 ipcMain.on('ipc-example', async (event, arg) => {
   const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
@@ -45,6 +46,11 @@ ipcMain.on('focus-browser-med', async () => {
 });
 ipcMain.on('center', async () => {
   mainWindow?.center();
+});
+ipcMain.on('prompt', async () => {
+  prompt(firstPrompt, mainWindow)
+    .then(() => prompt(secondPrompt, mainWindow))
+    .catch(() => 'yolo');
 });
 // eslint-disable-next-line consistent-return
 ipcMain.on('get-active-window', async () => {
@@ -66,7 +72,7 @@ const isDevelopment =
   process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true';
 
 if (isDevelopment) {
-  require('electron-debug')();
+  // require('electron-debug')();
 }
 
 const installExtensions = async () => {
@@ -121,7 +127,7 @@ const createWindow = async () => {
   });
 
   mainWindow.on('closed', () => {
-    mainWindow = null;
+    mainWindow = undefined;
   });
 
   const menuBuilder = new MenuBuilder(mainWindow);
@@ -157,7 +163,7 @@ app
     app.on('activate', () => {
       // On macOS it's common to re-create a window in the app when the
       // dock icon is clicked and there are no other windows open.
-      if (mainWindow === null) createWindow();
+      if (mainWindow === undefined) createWindow();
     });
   })
   .catch(console.log);

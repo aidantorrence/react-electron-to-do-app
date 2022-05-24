@@ -16,3 +16,20 @@ if (process.env.NODE_ENV === 'development') {
     return `file://${path.resolve(__dirname, '../renderer/', htmlFileName)}`;
   };
 }
+
+export const firstPrompt = {
+  title: 'What did you accomplish?',
+  label: 'What did you accomplish?',
+  type: 'input' as const,
+  height: 800,
+  width: 800,
+  alwaysOnTop: true,
+};
+export const secondPrompt = {
+  title: 'What is your next 5 minute task?',
+  label: 'What is your next 5 minute task?',
+  type: 'input' as const,
+  height: 800,
+  width: 800,
+  alwaysOnTop: true,
+};
