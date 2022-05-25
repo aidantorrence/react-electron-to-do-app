@@ -18,14 +18,6 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export const firstPrompt = {
-  title: 'What distracted you?',
-  label: 'What distracted you?',
-  type: 'input' as const,
-  height: 800,
-  width: 800,
-  alwaysOnTop: true,
-};
-export const secondPrompt = {
   title: 'What did you accomplish?',
   label: 'What did you accomplish?',
   type: 'input' as const,
@@ -33,7 +25,23 @@ export const secondPrompt = {
   width: 800,
   alwaysOnTop: true,
 };
+export const secondPrompt = {
+  title: 'What should you do less of?',
+  label: 'What should you do less of?',
+  type: 'input' as const,
+  height: 800,
+  width: 800,
+  alwaysOnTop: true,
+};
 export const thirdPrompt = {
+  title: 'What should you do more of?',
+  label: 'What should you do more of?',
+  type: 'input' as const,
+  height: 800,
+  width: 800,
+  alwaysOnTop: true,
+};
+export const fourthPrompt = {
   title: 'What is your next 5 minute task?',
   label: 'What is your next 5 minute task?',
   type: 'input' as const,

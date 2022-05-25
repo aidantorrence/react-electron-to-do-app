@@ -19,6 +19,7 @@ import prompt from 'electron-prompt';
 import MenuBuilder from './menu';
 import {
   firstPrompt,
+  fourthPrompt,
   resolveHtmlPath,
   secondPrompt,
   thirdPrompt,
@@ -53,10 +54,15 @@ ipcMain.on('center', async () => {
   mainWindow?.center();
 });
 ipcMain.on('prompt', async () => {
-  prompt(firstPrompt, mainWindow)
-    .then(() => prompt(secondPrompt, mainWindow))
-    .then(() => prompt(thirdPrompt, mainWindow))
-    .catch(() => 'yolo');
+  try {
+    const firstRes = await prompt(firstPrompt, mainWindow);
+    const secondRes = await prompt(secondPrompt, mainWindow);
+    const thirdRes = await prompt(thirdPrompt, mainWindow);
+    const fourthRes = await prompt(fourthPrompt, mainWindow);
+    mainWindow?.webContents.send('fourthPrompt', fourthRes);
+  } catch {
+    console.log('Prompt cancelled');
+  }
 });
 // eslint-disable-next-line consistent-return
 ipcMain.on('get-active-window', async () => {

@@ -76,6 +76,19 @@ export default function App() {
   );
 
   useEffect(() => {
+    window.electron.ipcRenderer.on('fourthPrompt', (msg: any) => {
+      console.log(msg[0]);
+      const list = [
+        { id: Date.now(), content: msg[0] },
+        ...JSON.parse(localStorage.getItem('listItems') || '[]'),
+      ];
+      if (msg[0]) localStorage.setItem('listItems', JSON.stringify(list));
+      navigate('/currentTask');
+      window.electron.focusBrowserSmall();
+    });
+  }, [navigate]);
+
+  useEffect(() => {
     window.electron.ipcRenderer.on('activeWindow', (msg: any) => {
       const info = msg[0].url ? msg[0].url : msg[0]?.owner.name;
       for (let i = 0; i < distractions.length; i += 1) {
@@ -97,9 +110,12 @@ export default function App() {
   }, [currentTask, navigate]);
 
   useEffect(() => {
+    window.electron.center();
+    window.electron.prompt();
     const interval = setInterval(() => {
-      resetTimer();
+      window.electron.center();
       window.electron.prompt();
+      resetTimer();
     }, 1000 * timerLength);
     return () => clearInterval(interval);
   }, [resetTimer]);
