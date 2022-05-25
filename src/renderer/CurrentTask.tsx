@@ -20,10 +20,9 @@ export default function CurrentTask() {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const timer = useStore((state) => state.timer);
 
-  const [currentTask, setCurrentTask] = useState(
-    JSON.parse(localStorage.getItem('listItems') || '[{"content":""}]')[0]
-      .content
-  );
+  const currentTask = JSON.parse(
+    localStorage.getItem('listItems') || '[{"content":""}]'
+  )[0].content;
 
   useEffect(() => {
     window.addEventListener('resize', () => {

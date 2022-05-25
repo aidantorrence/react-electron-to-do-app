@@ -17,11 +17,11 @@ declare global {
   }
 }
 
-const timerLength = 60 * 30;
+const timerLength = 60 * 15;
 
 export const useStore = create((set: any) => ({
-  currentTask: '',
-  setCurrentTask: (input: string) => set({ currentTask: input }),
+  listItems: JSON.parse(localStorage.getItem('listItems') || '[]') as any[],
+  setListItems: (input: any[]) => set({ listItems: input }),
   timer: timerLength,
   decreaseTimer: () => set((state: any) => ({ timer: state.timer - 1 })),
   resetTimer: () => set({ timer: timerLength }),
@@ -32,11 +32,11 @@ export const useStore = create((set: any) => ({
 }));
 
 export default function App() {
-  const currentTask = useStore((state) => state.currentTask);
   const navigate = useNavigate();
   const setDistracted = useStore((state) => state.setDistracted);
   const decreaseTimer = useStore((state) => state.decreaseTimer);
   const resetTimer = useStore((state) => state.resetTimer);
+  const setListItems = useStore((state) => state.setListItems);
 
   const handleKeyDown = useCallback(
     (e) => {
@@ -77,16 +77,17 @@ export default function App() {
 
   useEffect(() => {
     window.electron.ipcRenderer.on('fourthPrompt', (msg: any) => {
-      console.log(msg[0]);
-      const list = [
-        { id: Date.now(), content: msg[0] },
-        ...JSON.parse(localStorage.getItem('listItems') || '[]'),
-      ];
-      if (msg[0]) localStorage.setItem('listItems', JSON.stringify(list));
-      navigate('/currentTask');
-      window.electron.focusBrowserSmall();
+      const currentItems = JSON.parse(
+        localStorage.getItem('listItems') || '[]'
+      );
+      if (msg[0] && !currentItems.includes(msg[0])) {
+        const list = [{ id: Date.now(), content: msg[0] }, ...currentItems];
+        localStorage.setItem('listItems', JSON.stringify(list));
+        setListItems(list);
+      }
     });
-  }, [navigate]);
+    return () => window.electron.ipcRenderer.removeAllListeners('fourthPrompt');
+  }, [setListItems]);
 
   useEffect(() => {
     window.electron.ipcRenderer.on('activeWindow', (msg: any) => {
@@ -107,11 +108,9 @@ export default function App() {
       window.electron.getActiveWindow();
     }, 1000 * 1);
     return () => clearInterval(interval);
-  }, [currentTask, navigate]);
+  }, [navigate]);
 
   useEffect(() => {
-    window.electron.center();
-    window.electron.prompt();
     const interval = setInterval(() => {
       window.electron.center();
       window.electron.prompt();

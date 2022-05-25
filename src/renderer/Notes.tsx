@@ -12,13 +12,7 @@
 /* eslint-disable no-return-assign */
 /* eslint-disable react/button-has-type */
 /* eslint-disable no-restricted-syntax */
-import {
-  useRef,
-  useState,
-  useEffect,
-  useCallback,
-  useLayoutEffect,
-} from 'react';
+import { useRef, useEffect, useCallback, useLayoutEffect } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useStore } from './App';
 import './App.css';
@@ -36,11 +30,13 @@ function resizeTextAreas(listItems: any, heightsRef: any) {
 }
 
 export default function Notes() {
-  const [listItems, setListItems] = useState(
-    JSON.parse(localStorage.getItem('listItems') || '[]') || []
-  ) as any;
+  // const [listItems, setListItems] = useState(
+  //   JSON.parse(localStorage.getItem('listItems') || '[]') || []
+  // ) as any;
   const heightsRef = useRef([]) as any;
   const timer = useStore((state) => state.timer);
+  const listItems = useStore((state) => state.listItems);
+  const setListItems = useStore((state) => state.setListItems);
 
   const reorder = (list: any, startIndex: any, endIndex: any) => {
     const result = Array.from(list);
@@ -57,7 +53,7 @@ export default function Notes() {
         setListItems([...listItems, { id: Date.now(), content: '' }]);
       }
     },
-    [listItems]
+    [listItems, setListItems]
   );
 
   useLayoutEffect(() => {

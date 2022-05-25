@@ -57,7 +57,7 @@ ipcMain.on('prompt', async () => {
   try {
     const firstRes = await prompt(firstPrompt, mainWindow);
     const secondRes = await prompt(secondPrompt, mainWindow);
-    const thirdRes = await prompt(thirdPrompt, mainWindow);
+    // const thirdRes = await prompt(thirdPrompt, mainWindow);
     const fourthRes = await prompt(fourthPrompt, mainWindow);
     mainWindow?.webContents.send('fourthPrompt', fourthRes);
   } catch {
