@@ -50,6 +50,10 @@ ipcMain.on('focus-browser-big', async () => {
 ipcMain.on('focus-browser-med', async () => {
   mainWindow?.setSize(400, 200);
 });
+ipcMain.on('focus-browser-skinny', async () => {
+  mainWindow?.setSize(250, 1000);
+  mainWindow?.setSize(250, 200);
+});
 ipcMain.on('center', async () => {
   mainWindow?.center();
 });

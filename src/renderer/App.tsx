@@ -17,7 +17,7 @@ declare global {
   }
 }
 
-const timerLength = 60 * 15;
+const timerLength = 60 * 30;
 
 export const useStore = create((set: any) => ({
   listItems: JSON.parse(localStorage.getItem('listItems') || '[]') as any[],
@@ -48,7 +48,7 @@ export default function App() {
       if (e.metaKey && e.key === '-') {
         e.preventDefault();
         navigate('/index.html');
-        window.electron.focusBrowserMed();
+        window.electron.focusBrowserSkinny();
       }
       if (e.metaKey && e.key === 'b') {
         e.preventDefault();
