@@ -18,12 +18,15 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export const firstPrompt = {
-  title: 'What did you accomplish?',
-  label: 'What did you accomplish?',
+  title: 'Add current task',
+  label: 'Add current task',
+  // title: 'What did you accomplish?',
+  // label: 'What did you accomplish?',
   type: 'input' as const,
   height: 800,
   width: 800,
   alwaysOnTop: true,
+  inputAttrs: { type: 'text', required: true },
 };
 export const secondPrompt = {
   title: 'What should you do less of?',

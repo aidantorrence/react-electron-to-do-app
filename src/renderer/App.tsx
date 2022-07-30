@@ -17,7 +17,7 @@ declare global {
   }
 }
 
-const timerLength = 60 * 30;
+const timerLength = 10 * 60; // 10 minutes
 
 export const useStore = create((set: any) => ({
   listItems: JSON.parse(localStorage.getItem('listItems') || '[]') as any[],
@@ -76,18 +76,41 @@ export default function App() {
   );
 
   useEffect(() => {
-    window.electron.ipcRenderer.on('fourthPrompt', (msg: any) => {
+    window.electron.ipcRenderer.on('prompt', (msg: any) => {
+      fetch(`${config.api}/tasks`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: msg[0],
+          authorId: 1,
+          completed: false,
+        }),
+      });
+      resetTimer();
+      const startTimeout = () => {
+        const timeout = setTimeout(() => {
+          window.electron.center();
+          window.electron.prompt();
+        }, 1000 * timerLength);
+        return () => clearTimeout(timeout);
+      };
+      startTimeout();
       const currentItems = JSON.parse(
         localStorage.getItem('listItems') || '[]'
       );
-      if (msg[0] && !currentItems.includes(msg[0])) {
-        const list = [{ id: Date.now(), content: msg[0] }, ...currentItems];
-        localStorage.setItem('listItems', JSON.stringify(list));
-        setListItems(list);
-      }
+      // if (
+      //   msg[0] &&
+      //   !currentItems.map((el: any) => el.content).includes(msg[0])
+      // ) {
+      //   const list = [{ id: Date.now(), content: msg[0] }, ...currentItems];
+      //   localStorage.setItem('listItems', JSON.stringify(list));
+      //   setListItems(list);
+      // }
     });
-    return () => window.electron.ipcRenderer.removeAllListeners('fourthPrompt');
-  }, [setListItems]);
+    return () => window.electron.ipcRenderer.removeAllListeners('prompt');
+  }, [setListItems, resetTimer]);
 
   useEffect(() => {
     window.electron.ipcRenderer.on('activeWindow', (msg: any) => {
@@ -111,12 +134,11 @@ export default function App() {
   }, [navigate]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const timeout = setTimeout(() => {
       window.electron.center();
       window.electron.prompt();
-      resetTimer();
     }, 1000 * timerLength);
-    return () => clearInterval(interval);
+    return () => clearTimeout(timeout);
   }, [resetTimer]);
 
   useEffect(() => {

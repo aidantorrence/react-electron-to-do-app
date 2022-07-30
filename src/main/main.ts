@@ -59,11 +59,15 @@ ipcMain.on('center', async () => {
 });
 ipcMain.on('prompt', async () => {
   try {
-    const firstRes = await prompt(firstPrompt, mainWindow);
-    const secondRes = await prompt(secondPrompt, mainWindow);
-    // const thirdRes = await prompt(thirdPrompt, mainWindow);
-    const fourthRes = await prompt(fourthPrompt, mainWindow);
-    mainWindow?.webContents.send('fourthPrompt', fourthRes);
+    for (let i = 0; i < 10; i++) {
+      // eslint-disable-next-line no-await-in-loop
+      const res = await prompt(firstPrompt as any, mainWindow);
+      // const secondRes = await prompt(secondPrompt, mainWindow);
+      // const thirdRes = await prompt(thirdPrompt, mainWindow);
+      // const fourthRes = await prompt(fourthPrompt, mainWindow);
+      mainWindow?.webContents.send('prompt', res);
+      if (res !== null) break;
+    }
   } catch {
     console.log('Prompt cancelled');
   }
