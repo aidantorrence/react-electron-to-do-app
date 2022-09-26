@@ -75,42 +75,42 @@ export default function App() {
     [navigate]
   );
 
-  useEffect(() => {
-    window.electron.ipcRenderer.on('prompt', (msg: any) => {
-      fetch(`${config.api}/tasks`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: msg[0],
-          authorId: 1,
-          completed: false,
-        }),
-      });
-      resetTimer();
-      const startTimeout = () => {
-        const timeout = setTimeout(() => {
-          window.electron.center();
-          window.electron.prompt();
-        }, 1000 * timerLength);
-        return () => clearTimeout(timeout);
-      };
-      startTimeout();
-      const currentItems = JSON.parse(
-        localStorage.getItem('listItems') || '[]'
-      );
-      // if (
-      //   msg[0] &&
-      //   !currentItems.map((el: any) => el.content).includes(msg[0])
-      // ) {
-      //   const list = [{ id: Date.now(), content: msg[0] }, ...currentItems];
-      //   localStorage.setItem('listItems', JSON.stringify(list));
-      //   setListItems(list);
-      // }
-    });
-    return () => window.electron.ipcRenderer.removeAllListeners('prompt');
-  }, [setListItems, resetTimer]);
+  // useEffect(() => {
+  //   window.electron.ipcRenderer.on('prompt', (msg: any) => {
+  //     fetch(`${config.api}/tasks`, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         content: msg[0],
+  //         authorId: 1,
+  //         completed: false,
+  //       }),
+  //     });
+  //     resetTimer();
+  //     const startTimeout = () => {
+  //       const timeout = setTimeout(() => {
+  //         window.electron.center();
+  //         window.electron.prompt();
+  //       }, 1000 * timerLength);
+  //       return () => clearTimeout(timeout);
+  //     };
+  //     startTimeout();
+  //     const currentItems = JSON.parse(
+  //       localStorage.getItem('listItems') || '[]'
+  //     );
+  //     // if (
+  //     //   msg[0] &&
+  //     //   !currentItems.map((el: any) => el.content).includes(msg[0])
+  //     // ) {
+  //     //   const list = [{ id: Date.now(), content: msg[0] }, ...currentItems];
+  //     //   localStorage.setItem('listItems', JSON.stringify(list));
+  //     //   setListItems(list);
+  //     // }
+  //   });
+  //   return () => window.electron.ipcRenderer.removeAllListeners('prompt');
+  // }, [setListItems, resetTimer]);
 
   useEffect(() => {
     window.electron.ipcRenderer.on('activeWindow', (msg: any) => {

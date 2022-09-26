@@ -59,7 +59,7 @@ export default function Notes() {
   useLayoutEffect(() => {
     resizeTextAreas(listItems, heightsRef);
     localStorage.setItem('listItems', JSON.stringify(listItems));
-  }, [listItems]);
+  }, [listItems, setListItems]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
@@ -138,7 +138,16 @@ export default function Notes() {
 
   return (
     <div className="main">
-      <div className="notes-stopwatch">{formatTime(timer)}</div>
+      {/*  {formatTime(timer)} */}
+      <div className="notes-header">
+        <div className="notes-stopwatch">short, actionable tasks</div>
+        <button
+          className="list-add-button"
+          onClick={() =>
+            setListItems([{ id: Date.now(), content: '' }, ...listItems])
+          }
+        />
+      </div>
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable">
           {(drop, _) => (

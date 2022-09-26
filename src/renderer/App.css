@@ -78,7 +78,7 @@ h6 {
 
 .main {
   /* -webkit-app-region: drag; */
-  background-color: white;
+  background-color: #FEF49C;
   height: 100vh;
 }
 
@@ -95,6 +95,7 @@ h6 {
   font-family: BlinkMacSystemFont;
   user-select: none;
   font-weight: 500;
+  background-color: #FEF49C;
   /* caret-color: transparent; */
 }
 
@@ -435,7 +436,20 @@ h6 {
 .notes-stopwatch {
   font-size: 24px;
   font-weight: bold;
-  background-color: white;
-  text-align: center;
+  background-color: #FEF49C;
+}
+.list-add-button {
+  margin-left: 10px;
+background: radial-gradient(yellow, red);
+  border-width: 1px;
+  border-color: red;
+  /* background-color: rgb(179, 154, 154); */
+  border-radius: 999px;
+  padding: 10px;
   vertical-align: middle;
+}
+.notes-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
